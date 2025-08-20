@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="DebugDll|Win32">
+      <Configuration>DebugDll</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugLib|Win32">
+      <Configuration>DebugLib</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseDll|Win32">
+      <Configuration>ReleaseDll</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseLib|Win32">
+      <Configuration>ReleaseLib</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <ProjectGuid>{32C963D3-DCD6-4A26-9ED7-2C5BC5F463B1}</ProjectGuid>
+    <RootNamespace>rcommon</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseLib|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDll|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDll|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseLib|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDll|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugDll|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>17.0.35004.147</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDll|Win32'">
+    <OutDir>DebugDll\</OutDir>
+    <IntDir>DebugDll\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDll|Win32'">
+    <OutDir>ReleaseDll\</OutDir>
+    <IntDir>ReleaseDll\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'">
+    <OutDir>$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseLib|Win32'">
+    <OutDir>$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDll|Win32'">
+    <PreBuildEvent>
+      <Command>copy_h.bat $(ProjectName)</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(PRODPATH)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>RCOMMON_EXPORTS;RCOMMON_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <ResourceOutputFileName>$(IntDir)%(Filename)d.res</ResourceOutputFileName>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>comctl32.lib;mswsock.lib;ws2_32.lib;oledlg.lib;Msimg32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)rcommond.dll</OutputFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)rcommond.pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention />
+      <ImportLibrary>$(OutDir)rcommond.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy "%25PRODPATH%25src\$(ProjectName)\$(OutDir)$(TargetName).lib" "%25PRODPATH%25lib\"
+copy "%25PRODPATH%25src\$(ProjectName)\$(OutDir)$(TargetName).dll" "%25PRODPATH%25Shared\"
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDll|Win32'">
+    <PreBuildEvent>
+      <Command>copy_h.bat $(ProjectName)</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(PRODPATH)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>RCOMMON_EXPORTS;RCOMMON_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>comctl32.lib;mswsock.lib;ws2_32.lib;oledlg.lib;Msimg32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)rcommon.dll</OutputFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention />
+      <ImportLibrary>$(OutDir)rcommon.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy "%25PRODPATH%25src\$(ProjectName)\$(OutDir)$(TargetName).lib" "%25PRODPATH%25lib\"
+copy "%25PRODPATH%25src\$(ProjectName)\$(OutDir)$(TargetName).dll" "%25PRODPATH%25Shared\"
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'">
+    <PreBuildEvent>
+      <Command>.\copy_h.bat $(ProjectName)</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(CPP_INCLUDE_PATH);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>RCOMMON_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ResourceOutputFileName>$(IntDir)%(Filename)sd.res</ResourceOutputFileName>
+    </ResourceCompile>
+    <Lib>
+      <OutputFile>$(OutDir)$(ProjectName)sd.lib</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>copy %CPP_PATH_DEV%\src\$(ProjectName)\$(OutDir)$(ProjectName)sd.lib %CPP_PATH_DEV%\lib\
+copy %CPP_PATH_DEV%\src\$(ProjectName)\$(OutDir)$(ProjectName)sd.res %CPP_PATH_DEV%\lib\
+</Command>
+      <Message>Copying libraries to proper location</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseLib|Win32'">
+    <PreBuildEvent>
+      <Command>copy_h.bat $(ProjectName)</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(PRODPATH)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>RCOMMON_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ResourceOutputFileName>$(IntDir)%(Filename)s.res</ResourceOutputFileName>
+    </ResourceCompile>
+    <Lib>
+      <OutputFile>$(OutDir)$(ProjectName)s.lib</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>copy "%25PRODPATH%25src\$(ProjectName)\$(OutDir)$(TargetFileName)" "%25PRODPATH%25lib\"
+copy "%25PRODPATH%25src\$(ProjectName)\$(OutDir)$(ProjectName)s.res" "%25PRODPATH%25lib\"
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Autostart.cpp" />
+    <ClCompile Include="celltip.cpp" />
+    <ClCompile Include="conversion.cpp" />
+    <ClCompile Include="DatetimeHelper.cpp" />
+    <ClCompile Include="drawutl.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugDll|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseDll|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseLib|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="ExceptionHandler.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugDll|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseDll|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseLib|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="GetWinVer.cpp" />
+    <ClCompile Include="MiniVersion.cpp" />
+    <ClCompile Include="OleHelper.cpp" />
+    <ClCompile Include="RBaseSocket.cpp" />
+    <ClCompile Include="RBtnWnd.cpp" />
+    <ClCompile Include="RColorData.cpp" />
+    <ClCompile Include="RColorDownData.cpp" />
+    <ClCompile Include="RColorDownWnd.cpp" />
+    <ClCompile Include="RColorWnd.cpp" />
+    <ClCompile Include="rcommon.cpp" />
+    <ClCompile Include="RCrypt.cpp" />
+    <ClCompile Include="REmoDownWnd.cpp" />
+    <ClCompile Include="REmoWnd.cpp" />
+    <ClCompile Include="RGetHost.cpp" />
+    <ClCompile Include="RGetService.cpp" />
+    <ClCompile Include="RGetSocket.cpp" />
+    <ClCompile Include="RHyperlinkWnd.cpp" />
+    <ClCompile Include="rich.cpp" />
+    <ClCompile Include="RKeyboard.cpp" />
+    <ClCompile Include="RKeyWnd.cpp" />
+    <ClCompile Include="RListCtrl.cpp" />
+    <ClCompile Include="RListData.cpp" />
+    <ClCompile Include="RMessageBox.cpp" />
+    <ClCompile Include="RPinWnd.cpp" />
+    <ClCompile Include="RRawWnd.cpp" />
+    <ClCompile Include="RSocket.cpp" />
+    <ClCompile Include="RSplitterWnd.cpp" />
+    <ClCompile Include="RTheme.cpp" />
+    <ClCompile Include="RTipData.cpp" />
+    <ClCompile Include="RTrackerWnd.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugDll|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseDll|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseLib|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Autostart.h" />
+    <ClInclude Include="celltip.h" />
+    <ClInclude Include="conversion.h" />
+    <ClInclude Include="CrashFileNames.h" />
+    <ClInclude Include="DatetimeHelper.h" />
+    <ClInclude Include="DrawUtl.h" />
+    <ClInclude Include="ExceptionHandler.h" />
+    <ClInclude Include="GetWinVer.h" />
+    <ClInclude Include="MiniVersion.h" />
+    <ClInclude Include="OleHelper.h" />
+    <ClInclude Include="RBaseSocket.h" />
+    <ClInclude Include="RBtnWnd.h" />
+    <ClInclude Include="RColorData.h" />
+    <ClInclude Include="RColorDownData.h" />
+    <ClInclude Include="RColorDownWnd.h" />
+    <ClInclude Include="RColorWnd.h" />
+    <ClInclude Include="rcommon.h" />
+    <ClInclude Include="RCrypt.h" />
+    <ClInclude Include="RDataBuf.h" />
+    <ClInclude Include="RDynamicBuf.h" />
+    <ClInclude Include="registry_value.h" />
+    <ClInclude Include="REmoData.h" />
+    <ClInclude Include="REmoDownWnd.h" />
+    <ClInclude Include="REmoWnd.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="RException.h" />
+    <ClInclude Include="RGetHost.h" />
+    <ClInclude Include="RGetService.h" />
+    <ClInclude Include="RGetSocket.h" />
+    <ClInclude Include="RHyperlinkWnd.h" />
+    <ClInclude Include="rich.h" />
+    <ClInclude Include="RKeyboard.h" />
+    <ClInclude Include="RKeyData.h" />
+    <ClInclude Include="RKeyWnd.h" />
+    <ClInclude Include="RListCtrl.h" />
+    <ClInclude Include="RListData.h" />
+    <ClInclude Include="RMemDC.h" />
+    <ClInclude Include="RMessageBox.h" />
+    <ClInclude Include="RNotEnoughMemExc.h" />
+    <ClInclude Include="RoundIter.h" />
+    <ClInclude Include="ROwnExc.h" />
+    <ClInclude Include="RPinData.h" />
+    <ClInclude Include="RPinWnd.h" />
+    <ClInclude Include="RRawWnd.h" />
+    <ClInclude Include="rrc.h" />
+    <ClInclude Include="RSocket.h" />
+    <ClInclude Include="RSplitterData.h" />
+    <ClInclude Include="RSplitterWnd.h" />
+    <ClInclude Include="rstddef.h" />
+    <ClInclude Include="rstring.h" />
+    <ClInclude Include="RSystemExc.h" />
+    <ClInclude Include="RTheme.h" />
+    <ClInclude Include="RTipData.h" />
+    <ClInclude Include="RTrackerData.h" />
+    <ClInclude Include="RTrackerWnd.h" />
+    <ClInclude Include="stdafx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\close.bmp" />
+    <Image Include="res\cross.bmp" />
+    <Image Include="res\Pin.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="rcommon.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\Splith.cur" />
+    <None Include="res\Splitv.cur" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,4 @@
+#define LANG_POLISH (0x0415)
+#define SUBLANG_DEFAULT (0x0400)
+#define LANG_ENGLISH (0x0C09)
+#define SUBLANG_ENGLISH_US (0x01)
