@@ -10,7 +10,7 @@ HINSTANCE g_hModule = NULL;
 
 BOOL APIENTRY DllMain( HANDLE hModule, 
                        DWORD  ul_reason_for_call, 
-                       LPVOID lpReserved
+                       LPVOID /*lpReserved*/
 					 )
 {
 	switch (ul_reason_for_call)

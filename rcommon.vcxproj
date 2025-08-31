@@ -23,6 +23,7 @@
     <ProjectGuid>{32C963D3-DCD6-4A26-9ED7-2C5BC5F463B1}</ProjectGuid>
     <RootNamespace>rcommon</RootNamespace>
     <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseLib|Win32'" Label="Configuration">
@@ -69,22 +70,25 @@
     <_ProjectFileVersion>17.0.35004.147</_ProjectFileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDll|Win32'">
-    <OutDir>DebugDll\</OutDir>
-    <IntDir>DebugDll\</IntDir>
+    <OutDir>$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
     <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDll|Win32'">
-    <OutDir>ReleaseDll\</OutDir>
-    <IntDir>ReleaseDll\</IntDir>
+    <OutDir>$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'">
     <OutDir>$(Configuration)\</OutDir>
     <IntDir>$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)sd</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseLib|Win32'">
     <OutDir>$(Configuration)\</OutDir>
     <IntDir>$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)s</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDll|Win32'">
     <PreBuildEvent>
@@ -92,7 +96,7 @@
     </PreBuildEvent>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(PRODPATH)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CPP_INCLUDE_PATH);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>RCOMMON_EXPORTS;RCOMMON_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -101,6 +105,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
     </ClCompile>
     <ResourceCompile>
       <ResourceOutputFileName>$(IntDir)%(Filename)d.res</ResourceOutputFileName>
@@ -117,9 +122,9 @@
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>copy "%25PRODPATH%25src\$(ProjectName)\$(OutDir)$(TargetName).lib" "%25PRODPATH%25lib\"
-copy "%25PRODPATH%25src\$(ProjectName)\$(OutDir)$(TargetName).dll" "%25PRODPATH%25Shared\"
-</Command>
+      <Command>copy %CPP_PATH_DEV%\src\$(ProjectName)\$(OutDir)$(ProjectName)d.lib %CPP_PATH_DEV%\lib\
+copy %CPP_PATH_DEV%\src\$(ProjectName)\$(OutDir)$(ProjectName)d.res %CPP_PATH_DEV%\lib\
+copy %CPP_PATH_DEV%\src\$(ProjectName)\$(OutDir)$(ProjectName)d.dll %CPP_PATH_DEV%\Shared\</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDll|Win32'">
@@ -127,13 +132,14 @@ copy "%25PRODPATH%25src\$(ProjectName)\$(OutDir)$(TargetName).dll" "%25PRODPATH%
       <Command>copy_h.bat $(ProjectName)</Command>
     </PreBuildEvent>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(PRODPATH)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CPP_INCLUDE_PATH);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>RCOMMON_EXPORTS;RCOMMON_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
       <AdditionalDependencies>comctl32.lib;mswsock.lib;ws2_32.lib;oledlg.lib;Msimg32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -148,9 +154,9 @@ copy "%25PRODPATH%25src\$(ProjectName)\$(OutDir)$(TargetName).dll" "%25PRODPATH%
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>copy "%25PRODPATH%25src\$(ProjectName)\$(OutDir)$(TargetName).lib" "%25PRODPATH%25lib\"
-copy "%25PRODPATH%25src\$(ProjectName)\$(OutDir)$(TargetName).dll" "%25PRODPATH%25Shared\"
-</Command>
+      <Command>copy %CPP_PATH_DEV%\src\$(ProjectName)\$(OutDir)$(ProjectName).lib %CPP_PATH_DEV%\lib\
+copy %CPP_PATH_DEV%\src\$(ProjectName)\$(OutDir)$(ProjectName).res %CPP_PATH_DEV%\lib\
+copy %CPP_PATH_DEV%\src\$(ProjectName)\$(OutDir)$(ProjectName).dll %CPP_PATH_DEV%\Shared\</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'">
@@ -167,6 +173,7 @@ copy "%25PRODPATH%25src\$(ProjectName)\$(OutDir)$(TargetName).dll" "%25PRODPATH%
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>RCOMMON_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -177,8 +184,7 @@ copy "%25PRODPATH%25src\$(ProjectName)\$(OutDir)$(TargetName).dll" "%25PRODPATH%
     </Lib>
     <PostBuildEvent>
       <Command>copy %CPP_PATH_DEV%\src\$(ProjectName)\$(OutDir)$(ProjectName)sd.lib %CPP_PATH_DEV%\lib\
-copy %CPP_PATH_DEV%\src\$(ProjectName)\$(OutDir)$(ProjectName)sd.res %CPP_PATH_DEV%\lib\
-</Command>
+copy %CPP_PATH_DEV%\src\$(ProjectName)\$(OutDir)$(ProjectName)sd.res %CPP_PATH_DEV%\lib\</Command>
       <Message>Copying libraries to proper location</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -188,12 +194,13 @@ copy %CPP_PATH_DEV%\src\$(ProjectName)\$(OutDir)$(ProjectName)sd.res %CPP_PATH_D
     </PreBuildEvent>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(PRODPATH)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CPP_INCLUDE_PATH);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>RCOMMON_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -203,9 +210,8 @@ copy %CPP_PATH_DEV%\src\$(ProjectName)\$(OutDir)$(ProjectName)sd.res %CPP_PATH_D
       <OutputFile>$(OutDir)$(ProjectName)s.lib</OutputFile>
     </Lib>
     <PostBuildEvent>
-      <Command>copy "%25PRODPATH%25src\$(ProjectName)\$(OutDir)$(TargetFileName)" "%25PRODPATH%25lib\"
-copy "%25PRODPATH%25src\$(ProjectName)\$(OutDir)$(ProjectName)s.res" "%25PRODPATH%25lib\"
-</Command>
+      <Command>copy %CPP_PATH_DEV%\src\$(ProjectName)\$(OutDir)$(ProjectName)s.lib %CPP_PATH_DEV%\lib\
+copy %CPP_PATH_DEV%\src\$(ProjectName)\$(OutDir)$(ProjectName)s.res %CPP_PATH_DEV%\lib\</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -332,7 +338,9 @@ copy "%25PRODPATH%25src\$(ProjectName)\$(OutDir)$(ProjectName)s.res" "%25PRODPAT
     <Image Include="res\Pin.bmp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="rcommon.rc" />
+    <ResourceCompile Include="rcommon.rc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseDll|Win32'">false</ExcludedFromBuild>
+    </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\Splith.cur" />

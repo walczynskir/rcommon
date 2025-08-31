@@ -13,14 +13,12 @@
 #include <commdlg.h>
 #include "RTheme.h"
 
-
 static const long c_iWindowOfs = sizeof(RColorDownData*) - 4;
 
 
 // messages
 static inline void OnNcDestroy(HWND a_hWnd);
 static inline void OnPaint(HWND a_hWnd);
-static inline void OnGetMinMaxInfo(HWND a_hWnd, LPMINMAXINFO a_pMMI);
 static inline void OnKeyDown(HWND a_hWnd, int a_iKey);
 static inline void OnKeyUp(HWND a_hWnd, int a_iKey);
 static inline void OnSysKeyDown(HWND a_hWnd, int a_iKey);
@@ -77,9 +75,8 @@ static inline BOOL PointOnButton(HWND a_hWnd, const LPPOINT a_pPoint);
 static void ColorIndexToRect(HWND a_hWnd, UINT a_iIdx, LPRECT a_pRect);
 
 static inline RColorDownData* GetRColorDownData(HWND a_hWnd);
+static inline void SetRColorDownData(HWND a_hWnd, RColorDownData* a_pData);
 
-static LRESULT CALLBACK HookCreateProc(int a_nCode, WPARAM a_wParam, LPARAM a_lParam);
-static HHOOK s_hHook = NULL;
 
 #define IsWordStyle(a_hWnd) ((::GetWindowLong(a_hWnd, GWL_STYLE) & RCCS_WORDSTYLE) != 0)
 
@@ -122,20 +119,22 @@ RColorDownWnd_RegisterClass()
 }
 
 
+
+
 //	---------------------------------------------------------------------------
 //	Utworzenie okna
 //
 HWND RColorDownWnd_Create(HWND a_hWndOwner, DWORD a_dwStyle, RColorData* a_pData)
 {
 
-	DWORD l_dwStyle = WS_THICKFRAME | WS_CHILD | WS_BORDER | WS_CLIPSIBLINGS | a_dwStyle & 0xFFFF;
+	DWORD l_dwStyle = WS_POPUP | (a_dwStyle & 0xFFFF);
 	DWORD l_dwStyleEx = WS_EX_TOOLWINDOW;
 
-	// because Windows sends WM_GETMINMAXINFO before WM_CREATE! :(
-	s_hHook = ::SetWindowsHookEx(WH_CBT, HookCreateProc, ::GetModuleHandle(NULL), ::GetCurrentThreadId());
 	HWND l_hWnd = ::CreateWindowEx(l_dwStyleEx, RColorDownWnd_ClassName, _T(""), l_dwStyle, 
 		CW_USEDEFAULT, CW_USEDEFAULT, 0, 0, ::GetDesktopWindow(), 0, RCommon_GetInstance(), a_pData);
-	::UnhookWindowsHookEx(s_hHook);
+
+	RColorDownData* l_pDownData = new RColorDownData(a_pData);
+	SetRColorDownData(l_hWnd, l_pDownData);
 
 	RColorDownData* l_pData = GetRColorDownData(l_hWnd);
 	l_pData->SetOwner(a_hWndOwner);
@@ -183,10 +182,6 @@ RColorDownWnd_WndProc(
 {	
 	switch (a_iMsg) 
 	{
-		case WM_GETMINMAXINFO:
-			OnGetMinMaxInfo(a_hWnd, reinterpret_cast<LPMINMAXINFO>(a_lParam));
-			break;
-
 		case WM_PAINT:
 			OnPaint(a_hWnd);
 			break;
@@ -251,9 +246,7 @@ RColorDownWnd_WndProc(
 //
 RColorDownData*	GetRColorDownData(HWND a_hWnd)
 {
-#pragma warning(disable: 4312)
 	return reinterpret_cast<RColorDownData*>(::GetWindowLongPtr(a_hWnd, c_iWindowOfs));
-#pragma warning(default: 4312)
 }
 
 
@@ -266,9 +259,7 @@ SetRColorDownData(
 	RColorDownData* a_pData	//IN
 	)
 {
-#pragma warning(disable: 4244)
 	::SetWindowLongPtr(a_hWnd, c_iWindowOfs, reinterpret_cast<LONG_PTR>(a_pData));
-#pragma warning(default: 4244)
 }
 
 
@@ -281,19 +272,6 @@ void OnNcDestroy(HWND a_hWnd)
 	delete l_pData;
 }
 
-
-//	---------------------------------------------------------------------------
-//	On WM_GETMINMAXINFO
-//
-void OnGetMinMaxInfo(HWND a_hWnd, LPMINMAXINFO a_pMMI)
-{
-	a_pMMI->ptMaxSize.x = GetWidth(a_hWnd);
-	a_pMMI->ptMaxSize.y = GetHeight(a_hWnd);
-	a_pMMI->ptMinTrackSize.x  = GetWidth(a_hWnd);
-	a_pMMI->ptMinTrackSize.y  = GetHeight(a_hWnd);
-	a_pMMI->ptMaxTrackSize.x  = GetWidth(a_hWnd);
-	a_pMMI->ptMaxTrackSize.y  = GetHeight(a_hWnd);
-}
 
 
 //	---------------------------------------------------------------------------
@@ -314,6 +292,7 @@ OnKeyUp(
 	if (a_iKey == VK_RETURN)
 	{
 		NotifyOwner(a_hWnd, l_pData->GetSelColor());
+
 		DropDown(a_hWnd, FALSE, NULL, 0);
 	}
 	else if (a_iKey == VK_LEFT)
@@ -463,6 +442,7 @@ OnLButtonUp(
 	if (PointOnColor(a_hWnd, a_pPoint, &l_color))
 	{
 		NotifyOwner(a_hWnd, l_pData->GetSelColor());
+		TRACE0("OnLButtonUp \n");
 		DropDown(a_hWnd, FALSE, NULL, 0);
 	}
 
@@ -586,7 +566,7 @@ OnPaint(
 
 	if (l_theme.OpenData(a_hWnd, L"MENU") != NULL)
 	{
-		TRACE0("Needs to be checked, as needed to be replaced, see commented for previous version");
+		// TODO Needs to be checked, as needed to be replaced, see commented for previous version
 		//l_theme.DrawBackground(l_hMemDC, MP_MENUBARDROPDOWN,
 		//	MS_NORMAL, &l_rectWin, &l_rectClip);
 		l_theme.DrawBackground(l_hMemDC, HP_HEADERDROPDOWN,
@@ -847,7 +827,7 @@ void DropDown(HWND a_hWnd, BOOL a_bDown, LPCRECT a_pRect, COLORREF a_color)
 			l_pData->SetSelColor(a_color);
 			_ASSERT(a_pRect != NULL);
 			::SetWindowPos(a_hWnd, HWND_TOPMOST, a_pRect->left, a_pRect->bottom, 
-				0, 0, SWP_SHOWWINDOW);
+				GetWidth(a_hWnd), GetHeight(a_hWnd), SWP_SHOWWINDOW);
 			::SetCapture(a_hWnd);
 		}
 	}
@@ -1191,6 +1171,7 @@ void ShowColorDlg(HWND a_hWnd)
 {
 
 	RColorDownData* l_pData = GetRColorDownData(a_hWnd);
+	
 	DropDown(a_hWnd, FALSE, NULL, 0);
 
 	CHOOSECOLOR l_chooseColor;
@@ -1334,19 +1315,5 @@ void ColorIndexToRect(HWND a_hWnd, UINT a_iIdx, LPRECT a_pRect)
 	a_pRect->bottom = a_pRect->top + s_dyColor + c_iRectSpace;
 }
 
-
-LRESULT CALLBACK HookCreateProc(int a_nCode, WPARAM a_wParam, LPARAM a_lParam)
-{
-	if ((a_nCode != HCBT_CREATEWND) || (s_hHook == NULL))
-	{
-		return ::CallNextHookEx(s_hHook, a_nCode, a_wParam, a_lParam);
-	}
-
-	LPCBT_CREATEWND l_pCbt = reinterpret_cast<LPCBT_CREATEWND>(a_lParam);
-	const RColorData* l_pData = reinterpret_cast<RColorData*>(l_pCbt->lpcs->lpCreateParams);
-	RColorDownData* l_pDownData = new RColorDownData(l_pData);
-	SetRColorDownData(reinterpret_cast<HWND>(a_wParam), l_pDownData);
-	return ::CallNextHookEx(s_hHook, a_nCode, a_wParam, a_lParam);
-}
 
 

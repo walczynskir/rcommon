@@ -227,14 +227,14 @@ void OnPaint(HWND a_hWnd)
 
 void Draw(HWND a_hWnd, HDC a_hDC)
 {
-	RECT l_rect;
-	::GetClientRect(a_hWnd, &l_rect);
+	RECT l_rectClient;
+	::GetClientRect(a_hWnd, &l_rectClient);
 	RSplitterData* l_pData = GetRData(a_hWnd);
 
 	long l_iSize = GetPaneSize(a_hWnd, 0);
 	if (IsHorizontal(a_hWnd))
 	{
-		long l_dxWidth = RectWidth(l_rect);
+		long l_dxWidth = RectWidth(l_rectClient);
 		RECT l_rectBar = { 0, l_iSize, l_dxWidth, l_iSize +  + l_pData->m_btBarThickness};
 		if (::RectVisible(a_hDC, &l_rectBar))
 		{
@@ -259,7 +259,7 @@ void Draw(HWND a_hWnd, HDC a_hDC)
 	}
 	else	// vertical
 	{
-		long l_dyHeight = RectHeight(l_rect);
+		long l_dyHeight = RectHeight(l_rectClient);
 		RECT l_rectBar = { l_iSize, 0, l_iSize + l_pData->m_btBarThickness, l_dyHeight };
 		if (::RectVisible(a_hDC, &l_rectBar))
 		{
@@ -610,7 +610,6 @@ SetSize(HWND a_hWnd, BYTE a_btIdx, long a_iSize)
 		}
 		else
 		{
-			long l_iWinSize = WinSize(a_hWnd, l_rect);
 			if (l_iWinSize <= l_pData->m_btBarThickness)
 			{
 				l_pData->SetSize(0L);

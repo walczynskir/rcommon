@@ -16,6 +16,7 @@
 #ifndef GETWINVER_H
 #define GETWINVER_H
 
+/*  original version below
 #define WUNKNOWNSTR	_T("unknown Windows version")
 
 #define W95STR			_T("Windows 95")
@@ -59,6 +60,21 @@
 #define WCE			201
 #define WCELAST		299
 
-extern RCOMMON_API BOOL GetWinVer(LPTSTR pszVersion, int *nVersion, LPTSTR pszMajorMinorBuild);
+*/
+
+/* simplified version based on RtlGetVersion, for more info see https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_osversioninfow
+
+Operating System	Major	Minor	Build
+Windows 7			6		1		7601
+Windows 8			6		2		9200
+Windows 8.1			6		3		9600
+Windows 10			10		0		10240 +
+Windows 11			10		0		22000 +
+*/
+
+
+
+
+extern RCOMMON_API BOOL GetWinVer_s(LPTSTR a_sVersion, size_t a_iVerMax, DWORD* a_pBuild);
 
 #endif //GETWINVER_H

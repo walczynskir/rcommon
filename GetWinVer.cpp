@@ -15,6 +15,8 @@
 #include "stdafx.h"
 #include "tchar.h"
 #include "GetWinVer.h"
+#include <Windows.h>
+
 
 
 // from winbase.h
@@ -56,6 +58,68 @@ XP             2              5               1            2600
 CE             3
 
 */
+
+
+
+typedef LONG(WINAPI* RtlGetVersionPtr)(PRTL_OSVERSIONINFOW);
+#define WINVER_WINDOW7	_T("Windows 7")
+#define WINVER_WINDOW8	_T("Windows 8")
+#define WINVER_WINDOW81	_T("Windows 8.1")
+#define WINVER_WINDOW10	_T("Windows 10")
+#define WINVER_WINDOW11	_T("Windows 11")
+#define WINVER_UNKNOWN	_T("Unknown Windows version")
+
+
+
+/*
+Operating System	Major	Minor	Build
+Windows 7			6		1		7601
+Windows 8			6		2		9200
+Windows 8.1			6		3		9600
+Windows 10			10		0		10240 +
+Windows 11			10		0		21996 +
+*/
+
+// simplified and more up to date version of GetWinVer
+BOOL GetWinVer_s(LPTSTR a_sVersion, size_t a_iVerMax, DWORD* a_pBuild)
+{
+	RTL_OSVERSIONINFOW rovi = { 0 };
+	rovi.dwOSVersionInfoSize = sizeof(rovi);
+
+	HMODULE l_hModule = ::GetModuleHandle(L"ntdll.dll");
+	if (l_hModule == NULL)
+		return FALSE;
+
+	RtlGetVersionPtr l_fnRtlGetVersion = (RtlGetVersionPtr)GetProcAddress(l_hModule, "RtlGetVersion"); // there is no UNICODE version of GetProcAddress
+
+	if (l_fnRtlGetVersion == NULL)
+		return FALSE;
+
+
+	if (l_fnRtlGetVersion(&rovi) != 0)
+		return FALSE;
+
+	if (rovi.dwMajorVersion == 6 && rovi.dwMinorVersion == 1)
+		_tcsncpy_s(a_sVersion, a_iVerMax, WINVER_WINDOW7, _TRUNCATE);
+	else if (rovi.dwMajorVersion == 6 && rovi.dwMinorVersion == 2)
+		_tcsncpy_s(a_sVersion, a_iVerMax, WINVER_WINDOW8, _TRUNCATE);
+	else if (rovi.dwMajorVersion == 6 && rovi.dwMinorVersion == 3)
+		_tcsncpy_s(a_sVersion, a_iVerMax, WINVER_WINDOW81, _TRUNCATE);
+	else if (rovi.dwMajorVersion == 10 && rovi.dwMinorVersion == 0 && rovi.dwBuildNumber < 21996)
+		_tcsncpy_s(a_sVersion, a_iVerMax, WINVER_WINDOW10, _TRUNCATE);
+	else if (rovi.dwMajorVersion == 10 && rovi.dwMinorVersion == 0 && rovi.dwBuildNumber >= 21996)
+		_tcsncpy_s(a_sVersion, a_iVerMax, WINVER_WINDOW11, _TRUNCATE);
+	else
+		_tcsncpy_s(a_sVersion, a_iVerMax, WINVER_UNKNOWN, _TRUNCATE);
+	
+	*a_pBuild = rovi.dwBuildNumber;
+
+
+	return TRUE;
+}
+
+
+/* original version of GetWinVer
 
 ///////////////////////////////////////////////////////////////////////////////
 // GetWinVer
@@ -154,3 +218,4 @@ BOOL GetWinVer(LPTSTR pszVersion, int *nVersion, LPTSTR pszMajorMinorBuild)
 	}
 	return TRUE;
 }
+*/

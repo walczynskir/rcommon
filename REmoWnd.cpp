@@ -118,7 +118,6 @@ REmoWnd_WndProc(
 			break;
 
 		case WM_KEYDOWN:
-			TRACE0("KeyDown\n");
 			OnKeyDown(a_hWnd, a_wParam, a_lParam);
 			break;
 

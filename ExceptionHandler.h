@@ -16,6 +16,8 @@
 #ifndef	EXCEPTIONHANDLER_H
 #define	EXCEPTIONHANDLER_H
 
+#include <rcommon/rcommon.h>
+
 // We forward declare PEXCEPTION_POINTERS so that the function
 // prototype doesn't needlessly require windows.h.
 

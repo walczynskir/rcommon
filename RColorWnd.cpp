@@ -461,7 +461,6 @@ void OnKillFocus(
 		l_pData->SetNormal();
 	}
 	::RedrawWindow(a_hWnd, NULL, NULL, RDW_ERASE | RDW_INVALIDATE | RDW_UPDATENOW);
-	DropDown(a_hWnd, false);
 
 }
 			
@@ -512,6 +511,7 @@ void OnKeyUp(HWND a_hWnd, WPARAM a_iKey, LPARAM a_iFlags)
 	}
 	else if (a_iKey == VK_F4)
 	{
+
 		DropDown(a_hWnd, !IsDropDown(a_hWnd));
 	}
 	else if (a_iKey == VK_SPACE)

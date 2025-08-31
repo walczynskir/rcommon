@@ -4,8 +4,9 @@
 class RSystemExc : public RException
 {
 public:
-	RSystemExc() { SetCode(0); };
-	RSystemExc(DWORD a_dwCode) { SetCode(a_dwCode); };
+	RSystemExc() : m_sMsg(_T("")) { SetCode(0); };
+	RSystemExc(DWORD a_dwCode) : m_sMsg(_T(""))  { SetCode(a_dwCode); };
+	RSystemExc(DWORD a_dwCode, LPCTSTR a_sMsg) : m_sMsg(a_sMsg) { SetCode(a_dwCode); };
 	virtual ~RSystemExc(void) {};
 	RSystemExc& operator = (DWORD a_dwCode ) { m_dwCode = a_dwCode;	return *this; };
 
@@ -47,10 +48,11 @@ public:
 		{
 			::FreeLibrary(l_hLookupMod);
 		}
-		return l_sMsg;
+		return m_sMsg + _T(": ") + l_sMsg;
 	};
 
 private:
 	DWORD m_dwCode;
 	tstring m_sModule;
+	tstring m_sMsg;
 };

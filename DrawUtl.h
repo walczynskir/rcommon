@@ -62,6 +62,8 @@ extern RCOMMON_API void DrawCell(HDC a_hDC, const RECT& a_rect, const CLRCELL& a
 extern RCOMMON_API void DrawButtonBorder(HDC a_hDC, const RECT& a_rect, bool a_bPushed, bool a_bDisabled, bool a_bFlat, bool a_bHot);
 
 extern RCOMMON_API HBITMAP GetBitmap(HBITMAP a_hBmp, UINT a_x, UINT a_y, UINT a_dx, UINT a_dy);
+extern RCOMMON_API HBITMAP LoadImageFromResource(HINSTANCE a_hInstance, LPCWSTR a_sResourceName, LPCWSTR a_sResourceType);
+
 
 // like in Windows SDK AnimateWindow
 #define RAW_HOR_POSITIVE             0x00000001

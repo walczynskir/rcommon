@@ -782,12 +782,6 @@ void OnLButtonDown(HWND a_hWnd, UINT /*a_iFlags*/, const POINT& a_pt)
 		return;
 	}
 
-/*
-#ifdef _DEBUG
-T_CELL l_iCell = GetCellFromPoint(a_hWnd, a_pt, false);
-RTrace2("Button Down, Cell(%d, %d)\n", l_iCell.iRow, l_iCell.iCol);
-#endif
-*/
 	RListData* l_pData = GetRListCtrlData(a_hWnd);
 	long l_iCol;
 	long l_iRow;
@@ -834,12 +828,6 @@ RTrace2("Button Down, Cell(%d, %d)\n", l_iCell.iRow, l_iCell.iCol);
 void OnLButtonUp(HWND a_hWnd, UINT /*a_iFlags*/, const POINT& a_pt) 
 {
 	const RListData* l_pData = GetRListCtrlData(a_hWnd);
-/*
-#ifdef _DEBUG
-T_CELL l_iCell = GetCellFromPoint(a_hWnd, a_pt, false);
-RTrace2("Button Up, Cell(%d, %d)\n", l_iCell.iRow, l_iCell.iCol);
-#endif
-*/
 	if (l_pData->IsTrackingCol())
 	{
 		::ReleaseCapture();
@@ -1720,8 +1708,7 @@ void OnKeyDown(HWND a_hWnd,	UINT a_iChar, LPARAM a_lParam)
 
 	case VK_RETURN:
 		{
-			#pragma todo ("check, if works correctly after removing declaration of l_pData var")
-		const RListData* l_pData = GetRListCtrlData(a_hWnd);
+		#pragma todo ("check, if works correctly after removing declaration of l_pData var")
 		if ((l_nmkey.nVKey == VK_RETURN) && (!l_pData->IsEditCell()))
 		{
 			long l_iSelRow = l_pData->GetSelRow();
@@ -2729,7 +2716,7 @@ MouseOnGridRow(
 	// header borders
 	for (l_iRow = 0; l_iRow < l_pData->GetFixedRows(); l_iRow++)
 	{
-		T_ROWPOS l_rowPos = GetRowPos(a_hWnd, l_iRow);
+		l_rowPos = GetRowPos(a_hWnd, l_iRow);
 		if ((a_pt.y >= l_rowPos.yBottom - 1) && (a_pt.y <= l_rowPos.yBottom + 1))
 		{
 			return TRUE;
@@ -2739,7 +2726,7 @@ MouseOnGridRow(
 	// other rows grid
 	for (l_iRow = l_iStartRow; l_iRow < l_iStartRow + l_iRows2Draw; l_iRow++)
 	{
-		T_ROWPOS l_rowPos = GetRowPos(a_hWnd, l_iRow);
+		l_rowPos = GetRowPos(a_hWnd, l_iRow);
 		// bingo! - it is on border
 		if ((a_pt.y >= l_rowPos.yBottom - 1) && (a_pt.y <= l_rowPos.yBottom + 1))
 		{

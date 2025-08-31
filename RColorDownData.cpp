@@ -56,24 +56,28 @@ RColorDownData::RColorDownData(const RColorData* a_pData) : m_pData(a_pData)
 	m_colorSel = m_color;
 	m_bHovering = false;
 	m_bShowPrefix = false;
-	::LoadString(RCommon_GetInstance(), IDS_COLOR_BTN, m_sBtnText, ArraySize(m_sBtnText));
-	LPCTSTR l_psSign = m_sBtnText;
-	m_cAccell = _T('\0');
-	while (l_psSign != _T('\0'))
+	m_sBtnText[0] = L'\0';
+
+	if (::LoadString(RCommon_GetInstance(), IDS_COLOR_BTN, m_sBtnText, ArraySize(m_sBtnText)))
 	{
-		if (*l_psSign == _T('&')) 
+		LPCTSTR l_psSign = m_sBtnText;
+		m_cAccell = _T('\0');
+		while (l_psSign != _T('\0'))
 		{
-			if (*(l_psSign + 1) != _T('&'))
+			if (*l_psSign == _T('&'))
 			{
-				m_cAccell = static_cast<TCHAR>(_totupper(*(l_psSign + 1)));
-				break;
+				if (*(l_psSign + 1) != _T('&'))
+				{
+					m_cAccell = static_cast<TCHAR>(_totupper(*(l_psSign + 1)));
+					break;
+				}
+				else
+				{
+					l_psSign++;
+				}
 			}
-			else
-			{
-				l_psSign++;
-			}
+			l_psSign++;
 		}
-		l_psSign++;
 	}
 }
 

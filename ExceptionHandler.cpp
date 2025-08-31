@@ -317,11 +317,11 @@ static void DumpSystemInformation(HANDLE LogFile)
 	hprintf(LogFile, _T("%s, run by %s.\r\n"), szModuleName, szUserName);
 
 	// print out operating system
-	TCHAR szWinVer[50], szMajorMinorBuild[50];
-	int nWinVer;
-	GetWinVer(szWinVer, &nWinVer, szMajorMinorBuild);
-	hprintf(LogFile, _T("Operating system:  %s (%s).\r\n"), 
-		szWinVer, szMajorMinorBuild);
+	TCHAR szWinVer[50];
+	DWORD nWinVer;
+	GetWinVer_s(szWinVer, ArraySize(szWinVer), &nWinVer);
+	hprintf(LogFile, _T("Operating system:  %s (%d).\r\n"), 
+		szWinVer, nWinVer);
 
 	SYSTEM_INFO	SystemInfo;
 	GetSystemInfo(&SystemInfo);

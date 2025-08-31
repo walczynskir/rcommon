@@ -7,41 +7,43 @@
 #include <Vssym32.h>
 
 
-typedef HRESULT (FAR WINAPI *CTDPROC)(HTHEME);
-typedef HTHEME (FAR WINAPI *OTDPROC)(HWND, LPCWSTR);
-typedef HRESULT (FAR WINAPI *DTBPROC)(HTHEME, HDC, int, int, LPCRECT, LPCRECT);
-typedef HRESULT (FAR WINAPI *DTBEPROC)(HTHEME, HDC, int, int, LPCRECT, const DTBGOPTS*);
-typedef HRESULT (FAR WINAPI *DTPBPROC)(HWND, HDC, LPRECT);
-typedef HRESULT (FAR WINAPI *DTTPROC)(HTHEME, HDC, int, int, LPCWSTR, int, DWORD, DWORD, LPCRECT);
-typedef HRESULT (FAR WINAPI *DTEPROC)(HTHEME, HDC, int, int, LPCRECT, UINT, UINT, LPRECT);
-typedef HRESULT (FAR WINAPI *GTBCRPROC)(HTHEME, HDC, int, int, LPCRECT, LPRECT);
-typedef HRESULT (FAR WINAPI *GTFPROC)(HTHEME hTheme, HDC, int, int, int, LOGFONT*);
+typedef HRESULT(FAR WINAPI* CTDPROC)(HTHEME);
+typedef HTHEME(FAR WINAPI* OTDPROC)(HWND, LPCWSTR);
+typedef HRESULT(FAR WINAPI* DTBPROC)(HTHEME, HDC, int, int, LPCRECT, LPCRECT);
+typedef HRESULT(FAR WINAPI* DTBEPROC)(HTHEME, HDC, int, int, LPCRECT, const DTBGOPTS*);
+typedef HRESULT(FAR WINAPI* DTPBPROC)(HWND, HDC, LPRECT);
+typedef HRESULT(FAR WINAPI* DTTPROC)(HTHEME, HDC, int, int, LPCWSTR, int, DWORD, DWORD, LPCRECT);
+typedef HRESULT(FAR WINAPI* DTEPROC)(HTHEME, HDC, int, int, LPCRECT, UINT, UINT, LPRECT);
+typedef HRESULT(FAR WINAPI* GTBCRPROC)(HTHEME, HDC, int, int, LPCRECT, LPRECT);
+typedef HRESULT(FAR WINAPI* GTFPROC)(HTHEME hTheme, HDC, int, int, int, LOGFONT*);
+typedef COLORREF(FAR WINAPI* GTSCPROC)(HTHEME hTheme, int);
+typedef HRESULT(FAR WINAPI* GTCPROC)(HTHEME hTheme, int, int, int, COLORREF*);
 
-class RCOMMON_API RTheme  
+class RCOMMON_API RTheme
 {
 public:
 	RTheme();
 	virtual ~RTheme();
 
-	HRESULT CloseData() 
-	{ 
+	HRESULT CloseData()
+	{
 		ASSERT(m_hTheme != NULL);
 		HRESULT l_hr = (s_pfCloseData == NULL) ? S_OK : s_pfCloseData(m_hTheme);
 		l_hr == S_OK ? m_hTheme = NULL : 0;
-		return l_hr; 
+		return l_hr;
 	};
 
-	HTHEME OpenData(HWND a_hWnd, LPCWSTR a_wsClassList) 
-	{ 
-		m_hTheme = (s_pfOpenData == NULL) ? NULL : s_pfOpenData(a_hWnd, a_wsClassList); 
-		return m_hTheme; 
+	HTHEME OpenData(HWND a_hWnd, LPCWSTR a_wsClassList)
+	{
+		m_hTheme = (s_pfOpenData == NULL) ? NULL : s_pfOpenData(a_hWnd, a_wsClassList);
+		return m_hTheme;
 	};
 
 	HRESULT DrawBackground(HDC a_hDC, int a_iPartId, int a_iStateId, LPCRECT a_pRect, LPCRECT a_pClipRect = NULL)
 	{
 		ASSERT(m_hTheme != NULL);
 
-		TRACE0("Needs to be updated with checking of as below, look here: https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-drawthemebackground");
+		// TDOD Needs to be updated with checking of as below, look here: https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-drawthemebackground
 		//if (_hTheme)
 		//{
 		//	if (IsThemeBackgroundPartiallyTransparent(_hTheme, BP_PUSHBUTTON, _iStateId))
@@ -85,13 +87,25 @@ public:
 	HRESULT GetBackgroundContentRect(HDC a_hDC, int a_iPartId, int a_iStateId, LPCRECT a_pBoundingRect, LPRECT a_pContentRect)
 	{
 		ASSERT(m_hTheme != NULL);
-		return (s_pfGetBackgroundContentRect == NULL) ? S_OK : s_pfGetBackgroundContentRect(m_hTheme, a_hDC, a_iPartId, a_iStateId, a_pBoundingRect, a_pContentRect); 
+		return (s_pfGetBackgroundContentRect == NULL) ? S_OK : s_pfGetBackgroundContentRect(m_hTheme, a_hDC, a_iPartId, a_iStateId, a_pBoundingRect, a_pContentRect);
 	};
 
 	HRESULT GetFont(HDC a_hDC, int a_iPartId, int a_iStateId, int a_iPropId, LOGFONT* a_pLogfont)
 	{
 		ASSERT(m_hTheme != NULL);
-		return (s_pfGetFont == NULL) ? S_OK : s_pfGetFont(m_hTheme, a_hDC, a_iPartId, a_iStateId, a_iPropId, a_pLogfont); 
+		return (s_pfGetFont == NULL) ? S_OK : s_pfGetFont(m_hTheme, a_hDC, a_iPartId, a_iStateId, a_iPropId, a_pLogfont);
+	};
+
+	COLORREF GetSysColor(int a_iColorId)
+	{
+		ASSERT(m_hTheme != NULL);
+		return (s_pfGetSysColor == NULL) ? S_OK : s_pfGetSysColor(m_hTheme, a_iColorId);
+	}
+
+	HRESULT GetThemeColor(int a_iPartId, int a_iStateId, int a_iPropId, COLORREF* a_pColor)
+	{
+		ASSERT(m_hTheme != NULL);
+		return (s_pfGetThemeColor == NULL) ? S_OK : s_pfGetThemeColor(m_hTheme, a_iPartId, a_iStateId, a_iPropId, a_pColor);
 	};
 
 private:
@@ -108,5 +122,8 @@ private:
 	static DTTPROC s_pfDrawText;
 	static GTBCRPROC s_pfGetBackgroundContentRect;
 	static GTFPROC s_pfGetFont;
+	static GTSCPROC s_pfGetSysColor;
+	static GTCPROC s_pfGetThemeColor;
+
 };
 
