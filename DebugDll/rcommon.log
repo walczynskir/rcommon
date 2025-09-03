@@ -1,0 +1,155 @@
+﻿          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
+  stdafx.cpp
+  Autostart.cpp
+  celltip.cpp
+  conversion.cpp
+  DatetimeHelper.cpp
+  drawutl.cpp
+  GetWinVer.cpp
+  MiniVersion.cpp
+  automatic link to VERSION.LIB
+  OleHelper.cpp
+  RBaseSocket.cpp
+  RBtnWnd.cpp
+  RColorData.cpp
+  RColorDownData.cpp
+  RColorDownWnd.cpp
+  RColorWnd.cpp
+  rcommon.cpp
+  RCrypt.cpp
+  REmoDownWnd.cpp
+  C:\Users\User\Documents\Private\Development\src\rcommon\REmoDownWnd.cpp(420): TODO: "Needs to be checked, as needed to be replaced, see commented for previous version"
+  REmoWnd.cpp
+  RGetHost.cpp
+  RGetService.cpp
+  Generating Code...
+  Compiling...
+  RGetSocket.cpp
+  RHyperlinkWnd.cpp
+  rich.cpp
+  RKeyboard.cpp
+  RKeyWnd.cpp
+  RListCtrl.cpp
+  C:\Users\User\Documents\Private\Development\src\rcommon\RListCtrl.cpp(219): TODO: "smooth scroll"
+  C:\Users\User\Documents\Private\Development\src\rcommon\RListCtrl.cpp(220): TODO: "registered functions for celltips - I don't know what will be drawed."
+  C:\Users\User\Documents\Private\Development\src\rcommon\RListCtrl.cpp(221): TODO: "Handle not known count of rows"
+  C:\Users\User\Documents\Private\Development\src\rcommon\RListCtrl.cpp(1711): TODO: "check, if works correctly after removing declaration of l_pData var"
+  C:\Users\User\Documents\Private\Development\src\rcommon\RListCtrl.cpp(2966): TODO: "This code should probably be changed to be same as in InvalidateTrackedCol"
+  C:\Users\User\Documents\Private\Development\src\rcommon\RListCtrl.cpp(3598): TODO: "not able to properly calculate needed size for drawing rect, because don't know used font"
+  RListData.cpp
+  RMessageBox.cpp
+  RPinWnd.cpp
+  RRawWnd.cpp
+  RSocket.cpp
+C:\Users\User\Documents\Private\Development\include\rcommon\RSocket.h(68,14): warning C4251: 'RSocket::m_sAddress': 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of 'RSocket'
+  (compiling source file '/RSocket.cpp')
+      C:\Program Files\Microsoft Visual Studio\2022\Preview\VC\Tools\MSVC\14.44.35207\include\xstring(541,7):
+      see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+  
+C:\Users\User\Documents\Private\Development\include\rcommon\RSocket.h(74,13): warning C4251: 'RSocket::ReceiveLines': 'std::list<std::string,std::allocator<std::string>>' needs to have dll-interface to be used by clients of 'RSocket'
+  (compiling source file '/RSocket.cpp')
+      C:\Program Files\Microsoft Visual Studio\2022\Preview\VC\Tools\MSVC\14.44.35207\include\list(769,7):
+      see declaration of 'std::list<std::string,std::allocator<std::string>>'
+  
+C:\Users\User\Documents\Private\Development\include\rcommon\RSocket.h(75,14): warning C4251: 'RSocket::RemainingReceive': 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of 'RSocket'
+  (compiling source file '/RSocket.cpp')
+      C:\Program Files\Microsoft Visual Studio\2022\Preview\VC\Tools\MSVC\14.44.35207\include\xstring(541,7):
+      see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+  
+C:\Users\User\Documents\Private\Development\include\rcommon\RSocket.h(76,13): warning C4251: 'RSocket::SendLines': 'std::list<std::string,std::allocator<std::string>>' needs to have dll-interface to be used by clients of 'RSocket'
+  (compiling source file '/RSocket.cpp')
+      C:\Program Files\Microsoft Visual Studio\2022\Preview\VC\Tools\MSVC\14.44.35207\include\list(769,7):
+      see declaration of 'std::list<std::string,std::allocator<std::string>>'
+  
+C:\Users\User\Documents\Private\Development\include\rcommon\RSocket.h(79,20): warning C4251: 'RSocket::m_dynbuf': 'RDynamicBuf<BYTE>' needs to have dll-interface to be used by clients of 'RSocket'
+  (compiling source file '/RSocket.cpp')
+      C:\Users\User\Documents\Private\Development\include\rcommon\RDynamicBuf.h(4,7):
+      see declaration of 'RDynamicBuf<BYTE>'
+  
+C:\Users\User\Documents\Private\Development\src\rcommon\RSocket.cpp(123,31): warning C4996: 'inet_addr': Use inet_pton() or InetPton() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
+  (compiling source file '/RSocket.cpp')
+  
+C:\Users\User\Documents\Private\Development\src\rcommon\RSocket.cpp(146,8): warning C4996: 'WSAAsyncSelect': Use WSAEventSelect() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
+  (compiling source file '/RSocket.cpp')
+  
+C:\Users\User\Documents\Private\Development\src\rcommon\RSocket.cpp(162,9): warning C4996: 'WSAAsyncSelect': Use WSAEventSelect() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
+  (compiling source file '/RSocket.cpp')
+  
+C:\Users\User\Documents\Private\Development\src\rcommon\RSocket.cpp(183,6): warning C4996: 'WSAAsyncSelect': Use WSAEventSelect() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
+  (compiling source file '/RSocket.cpp')
+  
+C:\Users\User\Documents\Private\Development\src\rcommon\RSocket.cpp(235,11): warning C4996: 'WSAAsyncSelect': Use WSAEventSelect() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
+  (compiling source file '/RSocket.cpp')
+  
+C:\Users\User\Documents\Private\Development\src\rcommon\RSocket.cpp(243,11): warning C4996: 'WSAAsyncSelect': Use WSAEventSelect() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
+  (compiling source file '/RSocket.cpp')
+  
+C:\Users\User\Documents\Private\Development\src\rcommon\RSocket.cpp(251,11): warning C4996: 'WSAAsyncSelect': Use WSAEventSelect() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
+  (compiling source file '/RSocket.cpp')
+  
+C:\Users\User\Documents\Private\Development\src\rcommon\RSocket.cpp(489,9): warning C4996: 'WSAAsyncSelect': Use WSAEventSelect() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
+  (compiling source file '/RSocket.cpp')
+  
+C:\Users\User\Documents\Private\Development\src\rcommon\RSocket.cpp(754,6): warning C4996: 'WSAAsyncSelect': Use WSAEventSelect() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
+  (compiling source file '/RSocket.cpp')
+  
+C:\Users\User\Documents\Private\Development\src\rcommon\RSocket.cpp(850,22): warning C4996: 'inet_addr': Use inet_pton() or InetPton() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
+  (compiling source file '/RSocket.cpp')
+  
+C:\Users\User\Documents\Private\Development\src\rcommon\RSocket.cpp(853,27): warning C4996: 'gethostbyname': Use getaddrinfo() or GetAddrInfoW() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
+  (compiling source file '/RSocket.cpp')
+  
+  RSplitterWnd.cpp
+  RTheme.cpp
+  RTipData.cpp
+  RTrackerWnd.cpp
+  Generating Code...
+  ExceptionHandler.cpp
+Autostart.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/SAFESEH' specification
+     Creating library DebugDll\rcommond.lib and object DebugDll\rcommond.exp
+  rcommon.vcxproj -> C:\Users\User\Documents\Private\Development\src\rcommon\DebugDll\rcommond.dll
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.
