@@ -92,7 +92,8 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDll|Win32'">
     <PreBuildEvent>
-      <Command>copy_h.bat $(ProjectName)</Command>
+      <Command>.\copy_h.bat $(ProjectName)</Command>
+      <Message>Copying of the heders $(ProjectName)</Message>
     </PreBuildEvent>
     <ClCompile>
       <Optimization>Disabled</Optimization>
@@ -130,7 +131,8 @@ copy %CPP_PATH_DEV%\src\$(ProjectName)\$(OutDir)$(ProjectName)d.dll %CPP_PATH_DE
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDll|Win32'">
     <PreBuildEvent>
-      <Command>copy_h.bat $(ProjectName)</Command>
+      <Command>.\copy_h.bat $(ProjectName)</Command>
+      <Message>Copying of the heders $(ProjectName)</Message>
     </PreBuildEvent>
     <ClCompile>
       <AdditionalIncludeDirectories>$(CPP_INCLUDE_PATH);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -164,6 +166,7 @@ copy %CPP_PATH_DEV%\src\$(ProjectName)\$(OutDir)$(ProjectName).dll %CPP_PATH_DEV
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'">
     <PreBuildEvent>
       <Command>.\copy_h.bat $(ProjectName)</Command>
+      <Message>Copying of the heders $(ProjectName)</Message>
     </PreBuildEvent>
     <ClCompile>
       <Optimization>Disabled</Optimization>
@@ -193,7 +196,8 @@ copy %CPP_PATH_DEV%\src\$(ProjectName)\$(OutDir)$(ProjectName)sd.res %CPP_PATH_D
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseLib|Win32'">
     <PreBuildEvent>
-      <Command>copy_h.bat $(ProjectName)</Command>
+      <Command>.\copy_h.bat $(ProjectName)</Command>
+      <Message>Copying of the heders $(ProjectName)</Message>
     </PreBuildEvent>
     <ClCompile>
       <Optimization>Disabled</Optimization>
@@ -287,6 +291,7 @@ copy %CPP_PATH_DEV%\src\$(ProjectName)\$(OutDir)$(ProjectName)s.res %CPP_PATH_DE
     <ClInclude Include="DrawUtl.h" />
     <ClInclude Include="ExceptionHandler.h" />
     <ClInclude Include="GetWinVer.h" />
+    <ClInclude Include="LanguageManager.h" />
     <ClInclude Include="MiniVersion.h" />
     <ClInclude Include="OleHelper.h" />
     <ClInclude Include="RBaseSocket.h" />
@@ -347,6 +352,12 @@ copy %CPP_PATH_DEV%\src\$(ProjectName)\$(OutDir)$(ProjectName)s.res %CPP_PATH_DE
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="copy_h.bat">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseDll|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseLib|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugDll|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'">true</ExcludedFromBuild>
+    </None>
     <None Include="res\Splith.cur" />
     <None Include="res\Splitv.cur" />
   </ItemGroup>

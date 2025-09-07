@@ -7,6 +7,7 @@ public:
 	RSystemExc() : m_sMsg(_T("")) { SetCode(0); };
 	RSystemExc(DWORD a_dwCode) : m_sMsg(_T(""))  { SetCode(a_dwCode); };
 	RSystemExc(DWORD a_dwCode, LPCTSTR a_sMsg) : m_sMsg(a_sMsg) { SetCode(a_dwCode); };
+	RSystemExc(LPCTSTR a_sMsg) : m_sMsg(a_sMsg) { SetCode(::GetLastError()); };
 	virtual ~RSystemExc(void) {};
 	RSystemExc& operator = (DWORD a_dwCode ) { m_dwCode = a_dwCode;	return *this; };
 

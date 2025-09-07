@@ -417,7 +417,7 @@ OnPaint(
 	RTheme l_theme;
 	if (l_theme.OpenData(a_hWnd, L"MENU") != NULL)
 	{
-		#pragma todo("Needs to be checked, as needed to be replaced, see commented for previous version")
+		#pragma todo("Needs to be checked, as needed to be replaced, see comments for previous version")
 		//l_theme.DrawBackground(l_hMemDC, MP_MENUBARDROPDOWN,
 		//	MS_NORMAL, &l_rectWin, &l_rectClip);
 		l_theme.DrawBackground(l_hMemDC, HP_HEADERDROPDOWN,
