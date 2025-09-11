@@ -12,7 +12,7 @@
 // column definition for adding column
 typedef struct S_RLCCOLDEF
 {
-	LPTSTR psColName;
+	LPCTSTR psColName;
 	long iLength;
 } RLCCOLDEF, *LPRLCCOLDEF;
 

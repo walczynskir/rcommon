@@ -355,8 +355,8 @@ static const TCHAR *GetExceptionDescription(DWORD ExceptionCode)
 {
 	struct ExceptionNames
 	{
-		DWORD	ExceptionCode;
-		TCHAR *	ExceptionName;
+		DWORD			ExceptionCode;
+		LPCTSTR	ExceptionName;
 	};
 
 #if 0  // from winnt.h
@@ -601,7 +601,7 @@ int __cdecl RecordExceptionInfo(PEXCEPTION_POINTERS a_pExceptPtrs,
 		TCHAR szCrashModulePathName[MAX_PATH*2];
 		ZeroMemory(szCrashModulePathName, sizeof(szCrashModulePathName));
 
-		TCHAR *pszCrashModuleFileName = _T("Unknown");
+		LPCTSTR pszCrashModuleFileName = _T("Unknown");
 
 		MEMORY_BASIC_INFORMATION MemInfo;
 

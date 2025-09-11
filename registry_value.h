@@ -3,7 +3,7 @@
 #include <windows.h>
 #include <rcommon/rstring.h>
 #include <assert.h>
-
+#include <iomanip>
 
 class registry_value
 {
@@ -63,7 +63,7 @@ class registry_value
 			if(a_bWriteAccess)
 			{
 				DWORD l_dwDisposition;
-				if (RegCreateKeyEx(m_hkeyBase, m_sKeyName.c_str(), 0, _T(""), REG_OPTION_NON_VOLATILE, KEY_WRITE, 0, &m_hkey, &l_dwDisposition) == ERROR_SUCCESS)
+				if (RegCreateKeyEx(m_hkeyBase, m_sKeyName.c_str(), 0, nullptr, REG_OPTION_NON_VOLATILE, KEY_WRITE, 0, &m_hkey, &l_dwDisposition) == ERROR_SUCCESS)
 					return true;
 			}
 			
@@ -150,7 +150,7 @@ class registry_string : public registry_value
 
 			if(open(true))
 			{
-				ss << std::setprecision(20) << value;
+				l_ss << std::setprecision(20) << value;
 				tstring data = l_ss.str();
 
 				set_value(REG_SZ, data.length() + 1, data.c_str());
@@ -197,7 +197,7 @@ class registry_string<tstring> : public registry_value
 
 		operator tstring()
 		{
-			return get_value(_T(""));
+			return this->get_value(_T(""));
 		}
 
 		const registry_string & operator=(const tstring & value)
@@ -244,7 +244,7 @@ class registry_int : public registry_value
 
 		operator T()
 		{
-			return get_value(T());
+			return this->get_value(T());
 		}
 
 		const registry_int & operator=(const T & value)
@@ -291,7 +291,7 @@ class registry_binary : public registry_value
 
 		operator T()
 		{
-			return get_value(T());
+			return this->get_value(T());
 		}
 
 		const registry_binary & operator=(const T & value)
@@ -335,7 +335,7 @@ class registry_var_binary : public registry_value
 
 		operator T*()
 		{
-			return get_value(T());
+			return this->get_value(T());
 		}
 
 		const registry_var_binary & set_value(const T* a_pValue, size_t a_iElems)
@@ -367,7 +367,7 @@ public:
 
 	operator T()
 	{
-		return get_value(m_def);
+		return this->get_value(m_def);
 	}
 
 	const registry_string_def& operator=(const T & value)
@@ -391,7 +391,7 @@ public:
 
 	operator T()
 	{
-		return get_value(m_def);
+		return this->get_value(m_def);
 	}
 
 	const registry_binary_def& operator=(const T & value)
@@ -414,7 +414,7 @@ public:
 
 	operator T()
 	{
-		return get_value(m_def);
+		return this->get_value(m_def);
 	}
 
 	const registry_int_def& operator=(const T & value)

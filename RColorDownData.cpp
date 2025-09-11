@@ -62,7 +62,7 @@ RColorDownData::RColorDownData(const RColorData* a_pData) : m_pData(a_pData)
 	{
 		LPCTSTR l_psSign = m_sBtnText;
 		m_cAccell = _T('\0');
-		while (l_psSign != _T('\0'))
+		while (*l_psSign != _T('\0'))
 		{
 			if (*l_psSign == _T('&'))
 			{

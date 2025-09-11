@@ -86,7 +86,7 @@ BOOL GetWinVer_s(LPTSTR a_sVersion, size_t a_iVerMax, DWORD* a_pBuild)
 	RTL_OSVERSIONINFOW rovi = { 0 };
 	rovi.dwOSVersionInfoSize = sizeof(rovi);
 
-	HMODULE l_hModule = ::GetModuleHandle(L"ntdll.dll");
+	HMODULE l_hModule = ::GetModuleHandle(_T("ntdll.dll"));
 	if (l_hModule == NULL)
 		return FALSE;
 

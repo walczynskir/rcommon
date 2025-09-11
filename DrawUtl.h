@@ -7,6 +7,40 @@
 namespace RDraw
 {
 
+struct DpiContext
+{
+    float m_fScale = 1.0f;
+
+    explicit DpiContext(HWND a_hWnd)
+    {
+        m_fScale = static_cast<float>(::GetDpiForWindow(a_hWnd)) / 96.0f;
+    }
+
+    int Scale(int value) const { return static_cast<int>(value * m_fScale); }
+
+    RECT ScaleRect(const RECT& r) const
+    {
+        return {
+            Scale(r.left),
+            Scale(r.top),
+            Scale(r.right),
+            Scale(r.bottom)
+        };
+    }
+
+    SIZE ScaleSize(const SIZE& s) const
+    {
+        return { Scale(s.cx), Scale(s.cy) };
+    }
+
+    POINT ScalePoint(const POINT& p) const
+    {
+        return { Scale(p.x), Scale(p.y) };
+    }
+};
+
+
+
 typedef struct S_CLR3DBUTTON
 {
 	COLORREF clrFace;
@@ -32,6 +66,9 @@ typedef struct S_TEXTCELL
 	UINT		iFormat;	// like DrawText formats
 	short		nMargin;
 } TEXTCELL, *LPTEXTCELL;
+
+
+extern RCOMMON_API int DrawTextDPI(HDC a_hDC, LPCTSTR a_psText, int a_iLen, const LPPOINT a_pPt, const LPSIZE a_pSize, UINT a_iFmt, const DpiContext& a_dpi);
 
 
 extern RCOMMON_API void Draw3DRect(HDC a_hDC, const RECT& a_rect, COLORREF a_clrTopLeft, 
@@ -62,7 +99,7 @@ extern RCOMMON_API void DrawCell(HDC a_hDC, const RECT& a_rect, const CLRCELL& a
 extern RCOMMON_API void DrawButtonBorder(HDC a_hDC, const RECT& a_rect, bool a_bPushed, bool a_bDisabled, bool a_bFlat, bool a_bHot);
 
 extern RCOMMON_API HBITMAP GetBitmap(HBITMAP a_hBmp, UINT a_x, UINT a_y, UINT a_dx, UINT a_dy);
-extern RCOMMON_API HBITMAP LoadImageFromResource(HINSTANCE a_hInstance, LPCWSTR a_sResourceName, LPCWSTR a_sResourceType);
+extern RCOMMON_API HBITMAP LoadImageFromResource(HINSTANCE a_hInstance, UINT a_idResource, LPCTSTR a_sResourceType);
 
 
 // like in Windows SDK AnimateWindow
@@ -89,9 +126,10 @@ extern RCOMMON_API BOOL DrawBitmapTransparent(HDC a_hDC, int a_x, int a_y, HBITM
 extern RCOMMON_API void DrawStretchedBitmap(HDC a_hDC, const RECT& a_rect, HBITMAP a_hBmp, DWORD a_dwRop);
 extern RCOMMON_API void DrawStretchedBitmapTransparent(HDC a_hDC, const RECT& a_rect, HBITMAP a_hBmp, COLORREF a_clrTransparent);
 extern RCOMMON_API void DrawGradientRect(HDC a_hDC, const RECT& a_rect, COLORREF a_clr1, COLORREF a_clr2);
+extern RCOMMON_API void DrawTransparentAlphaBlend(HDC a_hDC, int a_x, int a_y, HBITMAP a_hBmp, BYTE a_btSrcAlpha);
 
 #ifndef _WIN32_WCE
-extern RCOMMON_API int DrawTextRotated(HDC a_hDC, LPTSTR a_psText, int a_iLen, const LPPOINT a_pPt, const LPSIZE a_pSize, UINT a_iFmt, int a_iAngle);
+extern RCOMMON_API int DrawTextRotated(HDC a_hDC, LPCTSTR a_psText, int a_iLen, const LPPOINT a_pPt, const LPSIZE a_pSize, UINT a_iFmt, int a_iAngle);
 #endif // of  !_WIN32_WCE
 
 // region functions

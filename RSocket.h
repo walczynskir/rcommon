@@ -102,7 +102,7 @@ public:
 
 	SocketStatus GetStatus(void) const { return m_status; }
 	tstring GetConnectedAddress(void) const;
-	tstring RSocket::GetServerAddress(void) const;
+	tstring GetServerAddress(void) const;
 
 protected:
  	BOOL Start(SOCKET sock = INVALID_SOCKET);

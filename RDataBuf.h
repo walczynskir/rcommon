@@ -19,7 +19,7 @@ public:
 
 	void SetData(const T* a_pData, UINT a_iSize)
 	{
-		T* l_pBuf = GetBuffer(a_iSize);
+		T* l_pBuf = this->GetBuffer(a_iSize);
 		m_iSize = a_iSize;
 		memcpy(l_pBuf, a_pData, a_iSize);
 	}
@@ -41,7 +41,7 @@ public:
 		UINT l_iStart = this->m_iSize;
 
 		T* l_pTemp = new T[m_iSize + a_databuf.GetDataSize()];
-		memcpy(l_pTemp, GetBufferData(), m_iSize);
+		memcpy(l_pTemp, this->GetBufferData(), m_iSize);
 		memcpy(l_pTemp + l_iStart, a_databuf.GetRawBuffer(), a_databuf.GetDataSize());
 		SetData(l_pTemp, m_iSize + a_databuf.GetDataSize());
 		delete[] l_pTemp;
