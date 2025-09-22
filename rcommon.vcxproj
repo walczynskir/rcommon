@@ -271,7 +271,6 @@ copy %CPP_PATH_DEV%\src\$(ProjectName)\$(OutDir)$(ProjectName)s.res %CPP_PATH_DE
     <ClCompile Include="RMessageBox.cpp" />
     <ClCompile Include="RPinWnd.cpp" />
     <ClCompile Include="RRawWnd.cpp" />
-    <ClCompile Include="RSocket.cpp" />
     <ClCompile Include="RSplitterWnd.cpp" />
     <ClCompile Include="RTheme.cpp" />
     <ClCompile Include="RTipData.cpp" />
@@ -330,7 +329,6 @@ copy %CPP_PATH_DEV%\src\$(ProjectName)\$(OutDir)$(ProjectName)s.res %CPP_PATH_DE
     <ClInclude Include="RPinWnd.h" />
     <ClInclude Include="RRawWnd.h" />
     <ClInclude Include="rrc.h" />
-    <ClInclude Include="RSocket.h" />
     <ClInclude Include="RSplitterData.h" />
     <ClInclude Include="RSplitterWnd.h" />
     <ClInclude Include="rstddef.h" />
@@ -349,11 +347,17 @@ copy %CPP_PATH_DEV%\src\$(ProjectName)\$(OutDir)$(ProjectName)s.res %CPP_PATH_DE
     <Image Include="res\Pin.bmp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="rcommon_pl-pl.rc" />
+    <ResourceCompile Include="rcommon_pl-pl.rc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseDll|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugDll|Win32'">true</ExcludedFromBuild>
+    </ResourceCompile>
     <ResourceCompile Include="rcommon.rc">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseDll|Win32'">false</ExcludedFromBuild>
     </ResourceCompile>
-    <ResourceCompile Include="rcommon_en-uk.rc" />
+    <ResourceCompile Include="rcommon_en-uk.rc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseDll|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugDll|Win32'">true</ExcludedFromBuild>
+    </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="copy_h.bat">

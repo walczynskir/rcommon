@@ -108,9 +108,6 @@
     <ClCompile Include="RRawWnd.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RSocket.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="RSplitterWnd.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -261,9 +258,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="rrc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RSocket.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="RSplitterData.h">

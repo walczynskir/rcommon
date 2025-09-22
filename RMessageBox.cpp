@@ -9,7 +9,7 @@ HWND RCenteredMessageBox::s_hParent = nullptr;
 
 
 
-int RCenteredMessageBox::Show(HWND hParent, LPCWSTR text, LPCWSTR caption, UINT type)
+int RCenteredMessageBox::Show(HWND hParent, LPCTSTR text, LPCTSTR caption, UINT type)
 {
     s_hParent = hParent;
     s_hHook = SetWindowsHookEx(WH_CBT, HookProc, nullptr, GetCurrentThreadId());
@@ -71,6 +71,27 @@ BOOL RCenteredMessageBox::DecisionBox2(HWND a_hWndParent, LPCTSTR a_sDecisionTex
 }
 
 
+class RCustomMessageBox::Impl 
+{
+public:
+    tstring m_sCaption;
+    tstring m_sMsg;
+    tstring m_sYes;
+    tstring m_sNo;
+};
+
+
+RCustomMessageBox::RCustomMessageBox(HINSTANCE a_hInst, HWND a_hParent) : m_hInstance(a_hInst), m_hParent(a_hParent), m_pImpl(new Impl())
+{
+}
+
+// in .cpp
+RCustomMessageBox::~RCustomMessageBox() 
+{
+    delete m_pImpl;
+}
+
+
 RCustomMessageBox::Result RCustomMessageBox::Show() {
     return static_cast<Result>(DialogBoxParam(
         m_hInstance,
@@ -110,17 +131,17 @@ INT_PTR CALLBACK RCustomMessageBox::DialogProc(HWND a_hDlg, UINT a_iMsg, WPARAM 
 
 BOOL RCustomMessageBox::OnInitDialog()
 {
-    if (!m_sCaption.empty())
-        ::SetWindowText(m_hDlg, m_sCaption.c_str());
+    if (!m_pImpl->m_sCaption.empty())
+        ::SetWindowText(m_hDlg, m_pImpl->m_sCaption.c_str());
 
-    if (!m_sMsg.empty())
-        ::SetDlgItemText(m_hDlg, IDC_STATIC, m_sMsg.c_str());
+    if (!m_pImpl->m_sMsg.empty())
+        ::SetDlgItemText(m_hDlg, IDC_STATIC, m_pImpl->m_sMsg.c_str());
 
-    if (!m_sYes.empty())
-        SetDlgItemText(m_hDlg, IDYES, m_sYes.c_str());
+    if (!m_pImpl->m_sYes.empty())
+        SetDlgItemText(m_hDlg, IDYES, m_pImpl->m_sYes.c_str());
 
-    if (!m_sNo.empty())
-        SetDlgItemText(m_hDlg, IDNO, m_sNo.c_str());
+    if (!m_pImpl->m_sNo.empty())
+        SetDlgItemText(m_hDlg, IDNO, m_pImpl->m_sNo.c_str());
 
     // Load icon
     HICON l_hIcon = nullptr;
@@ -165,6 +186,28 @@ BOOL RCustomMessageBox::OnInitDialog()
 }
 
 
+void RCustomMessageBox::SetCaption(LPCTSTR a_sCaption)
+{
+    m_pImpl->m_sCaption = a_sCaption;
+}
+
+
+void RCustomMessageBox::SetMessage(LPCTSTR a_sMsg)
+{
+    m_pImpl->m_sMsg = a_sMsg;
+}
+
+void RCustomMessageBox::SetYesLabel(LPCTSTR a_sYes) 
+{ 
+    m_pImpl->m_sYes = a_sYes;
+}
+
+void RCustomMessageBox::SetNoLabel(LPCTSTR a_sNo) 
+{ 
+    m_pImpl->m_sNo = a_sNo;
+}
+
+
 void RCustomMessageBox::AdjustDialogSize() 
 {
     HWND l_hWndText = ::GetDlgItem(m_hDlg, IDC_STATIC);
@@ -177,7 +220,7 @@ void RCustomMessageBox::AdjustDialogSize()
    :: SelectObject(l_hDC, l_hFont);
 
     RECT l_rcCalc = { 0, 0, 300, 0 }; // max width
-    ::DrawText(l_hDC, m_sMsg.c_str(), -1, &l_rcCalc, DT_CALCRECT | DT_WORDBREAK | DT_VCENTER);
+    ::DrawText(l_hDC, m_pImpl->m_sMsg.c_str(), -1, &l_rcCalc, DT_CALCRECT | DT_WORDBREAK | DT_VCENTER);
     ::ReleaseDC(l_hWndText, l_hDC);
 
     ::SetWindowPos(l_hWndText, nullptr, l_rcText.left, l_rcText.top, l_rcText.right, l_rcText.bottom, SWP_NOZORDER);
