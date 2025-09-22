@@ -13,3 +13,5 @@
 #define IDS_PIN_ON                              58007
 #define IDS_BOX_WARNING                         58008
 #define IDS_BOX_DECISION                        58009
+#define IDD_CUSTOM_MSGBOX						50010
+#define IDC_BOX_ICON							50011

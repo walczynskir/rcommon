@@ -9,5 +9,5 @@ public:
 	RException() {};
 	~RException(void) {};
 
-	virtual tstring GetFormattedMsg(void) { return _T(""); };
+	virtual tstring GetFormattedMsg(void) const { return _T(""); };
 };

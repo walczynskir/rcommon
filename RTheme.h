@@ -108,6 +108,8 @@ public:
 		return (s_pfGetThemeColor == NULL) ? S_OK : s_pfGetThemeColor(m_hTheme, a_iPartId, a_iStateId, a_iPropId, a_pColor);
 	};
 
+	bool IsValid() const { return (m_hTheme != NULL); };
+
 private:
 	HTHEME m_hTheme;
 

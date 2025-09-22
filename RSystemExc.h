@@ -1,5 +1,6 @@
 #pragma once
 #include <rcommon/RException.h>
+#include <format>  // C++20 header
 
 class RSystemExc : public RException
 {
@@ -16,7 +17,7 @@ public:
 	operator DWORD()const {	return m_dwCode; };
 	void SetModule(const tstring& a_sModule) { m_sModule = a_sModule; };
 
-	virtual tstring GetFormattedMsg(void) 
+	virtual tstring GetFormattedMsg(void)  const
 	{
 		DWORD	l_dwFmtRt		= 0;
 		DWORD	l_dwFlags		= FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_FROM_SYSTEM;
@@ -49,7 +50,7 @@ public:
 		{
 			::FreeLibrary(l_hLookupMod);
 		}
-		return m_sMsg + _T(": ") + l_sMsg;
+		return std::format(_T("{} - {}: {}"), m_sMsg, m_dwCode, l_sMsg);
 	};
 
 private:

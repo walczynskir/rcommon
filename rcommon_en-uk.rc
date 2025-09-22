@@ -1,0 +1,44 @@
+#include <windows.h>
+#include "resource.h"
+
+
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_UK
+#pragma code_page(1252)
+
+
+//
+// Bitmap resources
+//
+IDB_PIN            BITMAP         "res/Pin.bmp"
+
+//
+// Cursor resources
+//
+IDC_SPLITH         CURSOR         "res/SPLITH.CUR"
+IDC_SPLITV         CURSOR         "res/SPLITV.CUR"
+
+
+
+
+STRINGTABLE
+BEGIN
+    IDS_COLOR_BTN           "&Other"
+    IDS_ERR_UNKNOWN         "Unknown error."
+    IDS_PIN_OFF             "Turn off Always on Top"
+    IDS_PIN_ON              "Turn on Always on Top"
+    IDS_BOX_WARNING         "Warning"
+    IDS_BOX_DECISION        "Decision"
+END
+
+
+IDD_CUSTOM_MSGBOX DIALOGEX 0, 0, 180, 70
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Confirmation"
+FONT 9, "Segoe UI"
+BEGIN
+    CONTROL "", IDC_BOX_ICON, "STATIC", SS_ICON | SS_CENTERIMAGE | WS_CHILD | WS_VISIBLE, 7, 10, 32, 32
+    LTEXT "Do you want to continue?", IDC_STATIC, 40, 10, 130, 32
+    DEFPUSHBUTTON "Yes", IDYES, 30, 45, 50, 14
+    PUSHBUTTON     "No", IDNO, 100, 45, 50, 14
+END
+

@@ -17,7 +17,7 @@ public:
 
 	~ROwnExc(void) {}
 
-	virtual tstring GetFormattedMsg() { return m_sMsg; }
+	virtual tstring GetFormattedMsg() const { return m_sMsg; }
 
 private:
 	tstring m_sMsg;
