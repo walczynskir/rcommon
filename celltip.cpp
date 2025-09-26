@@ -14,11 +14,11 @@
 
 static const long c_iWindowOfs = sizeof(RTipData*) - 4;
 
-#define IsConstDx(a_hWnd)     (HasStyle(a_hWnd, RCTS_CONSTDX))
-#define IsConstDy(a_hWnd)     (HasStyle(a_hWnd, RCTS_CONSTDY))
+#define IsConstDx(a_hWnd)     (HasWindowStyle(a_hWnd, RCTS_CONSTDX))
+#define IsConstDy(a_hWnd)     (HasWindowStyle(a_hWnd, RCTS_CONSTDY))
 #define IsConstSize(a_hWnd)   (IsConstDx(a_hWnd) && IsConstDy(a_hWnd))
-#define IsFrame(a_hWnd)       (HasStyle(a_hWnd, RCTS_FRAME))
-#define IsAnimated(a_hWnd)    (HasStyle(a_hWnd, RCTS_ANIMATE))
+#define IsFrame(a_hWnd)       (HasWindowStyle(a_hWnd, RCTS_FRAME))
+#define IsAnimated(a_hWnd)    (HasWindowStyle(a_hWnd, RCTS_ANIMATE))
 
 
 // messages

@@ -45,7 +45,7 @@ static inline LRESULT Notify(HWND a_hWnd, LPNMHDR a_pNmHdr);
 static inline void CopyShortcutKey(LPRSHORTCUTKEY a_pKeyDst, LPRSHORTCUTKEY a_pKeySrc);
 
 #define KeyPressed(vkey, code) (((::GetKeyState(vkey) & 0xF000) == 0xF000) ? code : 0)
-#define HasStyle(hwnd, style) ((::GetWindowLong(hwnd, GWL_STYLE) & style) == style)
+#define HasWindowStyle(hwnd, style) ((::GetWindowLong(hwnd, GWL_STYLE) & style) == style)
 
 //	---------------------------------------------------------------------------------------
 //	Main RKeyWnd procedure
@@ -268,11 +268,11 @@ void Draw(
 	GetDrawText(a_hWnd, &l_sDraw);
 	HFONT l_hFontOld = (HFONT)::SelectObject(a_hDC, l_pData->m_hFont);
 	UINT l_iDrawStyle = DT_LEFT;
-	if (HasStyle(a_hWnd, RKS_CENTER))
+	if (HasWindowStyle(a_hWnd, RKS_CENTER))
 	{
 		l_iDrawStyle = DT_CENTER;
 	}
-	else if (HasStyle(a_hWnd, RKS_RIGHT))
+	else if (HasWindowStyle(a_hWnd, RKS_RIGHT))
 	{
 		l_iDrawStyle = DT_RIGHT;
 	}

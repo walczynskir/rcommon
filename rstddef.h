@@ -92,7 +92,7 @@
 #define HasVertScrollBar(a_hWnd) (::GetWindowLong(a_hWnd, GWL_STYLE) & WS_VSCROLL)
 #define HasHorzScrollBar(a_hWnd) (::GetWindowLong(a_hWnd, GWL_STYLE) & WS_HSCROLL)
 #define IsDisabled(a_hWnd) ((::GetWindowLong(a_hWnd, GWL_STYLE) & WS_DISABLED) != 0)
-#define HasStyle(a_hWnd, a_iStyle) ((::GetWindowLong(a_hWnd, GWL_STYLE) & a_iStyle) == a_iStyle)
+#define HasWindowStyle(a_hWnd, a_iStyle) ((::GetWindowLong(a_hWnd, GWL_STYLE) & a_iStyle) == a_iStyle)
 
 
 #define IsFocused(a_hWnd) (::GetFocus() == a_hWnd)

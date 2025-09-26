@@ -291,6 +291,7 @@ copy %CPP_PATH_DEV%\src\$(ProjectName)\$(OutDir)$(ProjectName)s.res %CPP_PATH_DE
     <ClInclude Include="DrawUtl.h" />
     <ClInclude Include="ExceptionHandler.h" />
     <ClInclude Include="GetWinVer.h" />
+    <ClInclude Include="IndexedMapVector.hpp" />
     <ClInclude Include="LanguageManager.h" />
     <ClInclude Include="MiniVersion.h" />
     <ClInclude Include="OleHelper.h" />

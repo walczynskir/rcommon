@@ -111,7 +111,7 @@ static inline LRESULT Notify(HWND a_hWnd, LPNMHDR a_pNmHdr);
 static HINSTANCE GotoURL(const tstring& a_sURL, int a_iShowCmd);
 static void FollowLink(HWND a_hWnd);
 
-#define HasStyle(a_hWnd, a_iStyle) ((::GetWindowLong(a_hWnd, GWL_STYLE) & a_iStyle) == a_iStyle)
+#define HasWindowStyle(a_hWnd, a_iStyle) ((::GetWindowLong(a_hWnd, GWL_STYLE) & a_iStyle) == a_iStyle)
 
 
 //TODO: Focusable
@@ -378,11 +378,11 @@ void Draw(
 	::GetClientRect(a_hWnd, &l_rect);
 	HFONT l_hFontOld = (HFONT)::SelectObject(a_hDC, l_pData->GetFont());
 	UINT l_iDrawStyle = DT_VCENTER | DT_SINGLELINE;
-	if (HasStyle(a_hWnd, HS_CENTER))
+	if (HasWindowStyle(a_hWnd, HS_CENTER))
 	{
 		l_iDrawStyle = l_iDrawStyle | DT_CENTER;
 	}
-	else if (HasStyle(a_hWnd, HS_RIGHT))
+	else if (HasWindowStyle(a_hWnd, HS_RIGHT))
 	{
 		l_iDrawStyle = l_iDrawStyle | DT_RIGHT;
 	}
@@ -531,7 +531,7 @@ void OnMouseMove(HWND a_hWnd, int a_xPos, int a_yPos)
 		TRACKMOUSEEVENT l_track = {sizeof(TRACKMOUSEEVENT), TME_LEAVE, a_hWnd, 1};
 		::TrackMouseEvent(&l_track);
 		::RedrawWindow(a_hWnd, NULL, NULL, RDW_ERASE | RDW_INVALIDATE | RDW_UPDATENOW);
-		if (!HasStyle(a_hWnd, HS_NOTIP))
+		if (!HasWindowStyle(a_hWnd, HS_NOTIP))
 		{
 			if (l_pData->m_hTip == NULL)
 			{
@@ -672,7 +672,7 @@ void AdjustWindow(HWND a_hWnd)
 	::GetWindowText(a_hWnd, l_sText, ArraySize(l_sText));
 	::GetTextExtentPoint32(l_hDC, l_sText, _tcslen(l_sText), &l_size);
 
-	if (HasStyle(a_hWnd, HS_CENTER))
+	if (HasWindowStyle(a_hWnd, HS_CENTER))
 	{
 		// we must move right and down our control by half of differences of size (dx and dy)
 		int l_dxMove = (RectWidth(l_rectWnd) - (l_size.cx + l_iBorderWidth)) / 2;
@@ -685,7 +685,7 @@ void AdjustWindow(HWND a_hWnd)
 
 		::SetWindowPos(a_hWnd, NULL, l_pt.x + l_dxMove, l_pt.y + l_dyMove, l_size.cx + l_iBorderWidth, l_size.cy + l_iBorderHeight, SWP_NOZORDER | SWP_NOREDRAW);
 	}
-	else if (HasStyle(a_hWnd, HS_RIGHT))
+	else if (HasWindowStyle(a_hWnd, HS_RIGHT))
 	{
 		// we must move right and down our control by differences of size (dx and dy)
 		int l_dxMove = (RectWidth(l_rectWnd) - (l_size.cx + l_iBorderWidth));

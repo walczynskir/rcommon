@@ -72,7 +72,7 @@ static inline void NotifyClose(HWND a_hWnd);
 static inline void NotifyPin(HWND a_hWnd);
 static inline LONG GetMinTrackSize(HWND a_hWnd);
 
-#define HasStyle(a_hWnd, a_iStyle) ((::GetWindowLong(a_hWnd, GWL_STYLE) & a_iStyle) == a_iStyle)
+#define HasWindowStyle(a_hWnd, a_iStyle) ((::GetWindowLong(a_hWnd, GWL_STYLE) & a_iStyle) == a_iStyle)
 
 // own hit-test code
 #define HTCAPTIONICON   100
@@ -336,21 +336,21 @@ LRESULT OnNcCalcSize(HWND a_hWnd, BOOL a_bCalc, LPARAM a_lParam)
 	{
 		::GetWindowRect(a_hWnd, &l_rectWin);
 	}
-	if (HasStyle(a_hWnd, PS_TITLELEFT))
+	if (HasWindowStyle(a_hWnd, PS_TITLELEFT))
 	{
 		l_pRectProp->left = l_rectWin.left + ::GetSystemMetrics(SM_CXFRAME) + ::GetSystemMetrics(SM_CYSMCAPTION);
 		l_pRectProp->right = l_rectWin.right - ::GetSystemMetrics(SM_CXFRAME);
 		l_pRectProp->top = l_rectWin.top + ::GetSystemMetrics(SM_CYFRAME);
 		l_pRectProp->bottom = l_rectWin.bottom - ::GetSystemMetrics(SM_CYFRAME);
 	}
-	else if (HasStyle(a_hWnd, PS_TITLERIGHT))
+	else if (HasWindowStyle(a_hWnd, PS_TITLERIGHT))
 	{
 		l_pRectProp->left = l_rectWin.left + ::GetSystemMetrics(SM_CXFRAME);
 		l_pRectProp->right = l_rectWin.right - ::GetSystemMetrics(SM_CXFRAME) - ::GetSystemMetrics(SM_CYSMCAPTION);
 		l_pRectProp->top = l_rectWin.top + ::GetSystemMetrics(SM_CYFRAME);
 		l_pRectProp->bottom = l_rectWin.bottom - ::GetSystemMetrics(SM_CYFRAME);
 	}
-	else if (HasStyle(a_hWnd, PS_TITLEBOTTOM))
+	else if (HasWindowStyle(a_hWnd, PS_TITLEBOTTOM))
 	{
 		l_pRectProp->left = l_rectWin.left + ::GetSystemMetrics(SM_CXFRAME);
 		l_pRectProp->right = l_rectWin.right - ::GetSystemMetrics(SM_CXFRAME);
@@ -394,7 +394,7 @@ void OnGetMinMaxInfo(HWND a_hWnd, LPMINMAXINFO a_pMinMaxInfo)
 	a_pMinMaxInfo->ptMaxSize.y = ::GetSystemMetrics(SM_CYSCREEN);
 	a_pMinMaxInfo->ptMaxPosition.x = 0;
 	a_pMinMaxInfo->ptMaxPosition.y = 0;
-	if (HasStyle(a_hWnd, PS_TITLELEFT) || HasStyle(a_hWnd, PS_TITLERIGHT))
+	if (HasWindowStyle(a_hWnd, PS_TITLELEFT) || HasWindowStyle(a_hWnd, PS_TITLERIGHT))
 	{
 		a_pMinMaxInfo->ptMinTrackSize.x = ::GetSystemMetrics(SM_CYSMCAPTION) + 2 * ::GetSystemMetrics(SM_CXFRAME);
 		a_pMinMaxInfo->ptMinTrackSize.y = GetMinTrackSize(a_hWnd);
@@ -479,7 +479,7 @@ void DrawCaption(HWND a_hWnd, HDC a_hDC)
 	l_gradRect.UpperLeft  = 0;
 	l_gradRect.LowerRight = 1;
 	ULONG l_iFillStyle = 
-		HasStyle(a_hWnd, PS_TITLELEFT) || HasStyle(a_hWnd, PS_TITLERIGHT) ? 
+		HasWindowStyle(a_hWnd, PS_TITLELEFT) || HasWindowStyle(a_hWnd, PS_TITLERIGHT) ? 
 			GRADIENT_FILL_RECT_H : GRADIENT_FILL_RECT_V;
 	::GradientFill(a_hDC, l_vert, ArraySize(l_vert), &l_gradRect, 1, l_iFillStyle);
 
@@ -1051,21 +1051,21 @@ long HitTest(HWND a_hWnd, int a_x, int a_y)
 void GetCaptionRect(HWND a_hWnd, LPRECT a_pRect)
 {
 	::GetWindowRect(a_hWnd, a_pRect);
-	if (HasStyle(a_hWnd, PS_TITLELEFT))
+	if (HasWindowStyle(a_hWnd, PS_TITLELEFT))
 	{
 		a_pRect->left += ::GetSystemMetrics(SM_CXFRAME);
 		a_pRect->right = a_pRect->left + ::GetSystemMetrics(SM_CYSMCAPTION);
 		a_pRect->top += ::GetSystemMetrics(SM_CYFRAME);
 		a_pRect->bottom -= ::GetSystemMetrics(SM_CYFRAME);
 	}
-	else if (HasStyle(a_hWnd, PS_TITLERIGHT))
+	else if (HasWindowStyle(a_hWnd, PS_TITLERIGHT))
 	{
 		a_pRect->right -= ::GetSystemMetrics(SM_CXFRAME);
 		a_pRect->left = a_pRect->right - ::GetSystemMetrics(SM_CYSMCAPTION);
 		a_pRect->top += ::GetSystemMetrics(SM_CYFRAME);
 		a_pRect->bottom -= ::GetSystemMetrics(SM_CYFRAME);
 	}
-	else if (HasStyle(a_hWnd, PS_TITLEBOTTOM))
+	else if (HasWindowStyle(a_hWnd, PS_TITLEBOTTOM))
 	{
 		a_pRect->left += ::GetSystemMetrics(SM_CXFRAME);
 		a_pRect->right -= ::GetSystemMetrics(SM_CXFRAME);
@@ -1089,15 +1089,15 @@ void GetCaptionIconRect(HWND a_hWnd, LPRECT a_pRect)
 {
 	GetCaptionRect(a_hWnd, a_pRect);
 	RPinData* l_pData = GetData(a_hWnd);
-	if (HasStyle(a_hWnd, PS_TITLELEFT))
+	if (HasWindowStyle(a_hWnd, PS_TITLELEFT))
 	{
 		a_pRect->bottom = a_pRect->top + l_pData->m_sizeCaption.cy;
 	}
-	else if (HasStyle(a_hWnd, PS_TITLERIGHT))
+	else if (HasWindowStyle(a_hWnd, PS_TITLERIGHT))
 	{
 		a_pRect->bottom = a_pRect->top + l_pData->m_sizeCaption.cy;
 	}
-	else if (HasStyle(a_hWnd, PS_TITLEBOTTOM))
+	else if (HasWindowStyle(a_hWnd, PS_TITLEBOTTOM))
 	{
 		a_pRect->right = a_pRect->left + l_pData->m_sizeCaption.cx;
 	}
@@ -1113,21 +1113,21 @@ void GetCaptionIconRect(HWND a_hWnd, LPRECT a_pRect)
 void GetCloseRect(HWND a_hWnd, LPRECT a_pRect)
 {
 	::GetWindowRect(a_hWnd, a_pRect);
-	if (HasStyle(a_hWnd, PS_TITLELEFT))
+	if (HasWindowStyle(a_hWnd, PS_TITLELEFT))
 	{
 		a_pRect->left += ::GetSystemMetrics(SM_CXFRAME);
 		a_pRect->right = a_pRect->left + ::GetSystemMetrics(SM_CYSMCAPTION);
 		a_pRect->bottom = a_pRect->bottom - ::GetSystemMetrics(SM_CYFRAME);
 		a_pRect->top = a_pRect->bottom - ::GetSystemMetrics(SM_CYSMCAPTION);
 	}
-	else if (HasStyle(a_hWnd, PS_TITLERIGHT))
+	else if (HasWindowStyle(a_hWnd, PS_TITLERIGHT))
 	{
 		a_pRect->right -= ::GetSystemMetrics(SM_CXFRAME);
 		a_pRect->left =  a_pRect->right - ::GetSystemMetrics(SM_CYSMCAPTION);
 		a_pRect->bottom = a_pRect->bottom - ::GetSystemMetrics(SM_CYFRAME);
 		a_pRect->top = a_pRect->bottom - ::GetSystemMetrics(SM_CYSMCAPTION);
 	}
-	else if (HasStyle(a_hWnd, PS_TITLEBOTTOM))
+	else if (HasWindowStyle(a_hWnd, PS_TITLEBOTTOM))
 	{
 		a_pRect->right -= ::GetSystemMetrics(SM_CXFRAME);
 		a_pRect->left =  a_pRect->right - ::GetSystemMetrics(SM_CYSMCAPTION);
@@ -1150,7 +1150,7 @@ void GetCloseRect(HWND a_hWnd, LPRECT a_pRect)
 void GetPinRect(HWND a_hWnd, LPRECT a_pRect)
 {
 	GetCloseRect(a_hWnd, a_pRect);
-	if (HasStyle(a_hWnd, PS_TITLELEFT) || HasStyle(a_hWnd, PS_TITLERIGHT))
+	if (HasWindowStyle(a_hWnd, PS_TITLELEFT) || HasWindowStyle(a_hWnd, PS_TITLERIGHT))
 	{
 		a_pRect->top -= ::GetSystemMetrics(SM_CYSMCAPTION);
 		a_pRect->bottom -= ::GetSystemMetrics(SM_CYSMCAPTION);
@@ -1169,7 +1169,7 @@ void GetPinRect(HWND a_hWnd, LPRECT a_pRect)
 void GetAdditIconRect(HWND a_hWnd, int a_iIcon, LPRECT a_pRect)
 {
 	GetPinRect(a_hWnd, a_pRect);
-	if (HasStyle(a_hWnd, PS_TITLELEFT) || HasStyle(a_hWnd, PS_TITLERIGHT))
+	if (HasWindowStyle(a_hWnd, PS_TITLELEFT) || HasWindowStyle(a_hWnd, PS_TITLERIGHT))
 	{
 		a_pRect->top -= (::GetSystemMetrics(SM_CYSMCAPTION) * (a_iIcon + 1));
 		a_pRect->bottom -= (::GetSystemMetrics(SM_CYSMCAPTION) * (a_iIcon + 1));
@@ -1272,7 +1272,7 @@ void GetCaptionTextPosSize(HWND a_hWnd, const LPPOINT a_pPt, const LPSIZE a_pSiz
 	::GetWindowRect(a_hWnd, &l_rect);
 	RPinData* l_pData = GetData(a_hWnd);
 	int l_iAdditSize = 0;
-	if (HasStyle(a_hWnd, PS_TITLELEFT))
+	if (HasWindowStyle(a_hWnd, PS_TITLELEFT))
 	{
 		a_pPt->x = ::GetSystemMetrics(SM_CYSMCAPTION) + ::GetSystemMetrics(SM_CXFRAME);
 		a_pPt->y = ::GetSystemMetrics(SM_CYFRAME) + 2;
@@ -1285,7 +1285,7 @@ void GetCaptionTextPosSize(HWND a_hWnd, const LPPOINT a_pPt, const LPSIZE a_pSiz
 			a_pSize->cx -= (l_pData->m_sizeCaption.cy + 2);
 		}
 	}
-	else if (HasStyle(a_hWnd, PS_TITLERIGHT))
+	else if (HasWindowStyle(a_hWnd, PS_TITLERIGHT))
 	{
 		a_pPt->x = RectWidth(l_rect) - ::GetSystemMetrics(SM_CXFRAME);
 		a_pPt->y = ::GetSystemMetrics(SM_CYFRAME) + 2;
@@ -1298,7 +1298,7 @@ void GetCaptionTextPosSize(HWND a_hWnd, const LPPOINT a_pPt, const LPSIZE a_pSiz
 			a_pSize->cx -= (l_pData->m_sizeCaption.cy + 2);
 		}
 	}
-	else if (HasStyle(a_hWnd, PS_TITLEBOTTOM))
+	else if (HasWindowStyle(a_hWnd, PS_TITLEBOTTOM))
 	{
 		a_pPt->x = ::GetSystemMetrics(SM_CXFRAME) + 2;
 		a_pPt->y = RectHeight(l_rect) - ::GetSystemMetrics(SM_CYFRAME) - ::GetSystemMetrics(SM_CYSMCAPTION);
@@ -1330,7 +1330,7 @@ void GetCaptionTextPosSize(HWND a_hWnd, const LPPOINT a_pPt, const LPSIZE a_pSiz
 
 int GetTitleAngle(HWND a_hWnd)
 {
-	if (HasStyle(a_hWnd, PS_TITLELEFT) || HasStyle(a_hWnd, PS_TITLERIGHT))
+	if (HasWindowStyle(a_hWnd, PS_TITLELEFT) || HasWindowStyle(a_hWnd, PS_TITLERIGHT))
 	{
 		return 90;
 	}
@@ -1376,7 +1376,7 @@ void ScreenToWindow(HWND a_hWnd, LPRECT a_pRect)
 LONG GetMinTrackSize(HWND a_hWnd)
 {
 	RPinData* l_pData = GetData(a_hWnd);
-	if (HasStyle(a_hWnd, PS_TITLELEFT) || HasStyle(a_hWnd, PS_TITLERIGHT))
+	if (HasWindowStyle(a_hWnd, PS_TITLELEFT) || HasWindowStyle(a_hWnd, PS_TITLERIGHT))
 	{
 		return 2 * ::GetSystemMetrics(SM_CYFRAME) + 4 + l_pData->m_sizePin.cy * 2 + 
 			l_pData->m_sizeAddit.cy * l_pData->m_iCntAddit + l_pData->m_sizeCaption.cy + 20;
