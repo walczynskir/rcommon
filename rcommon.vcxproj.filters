@@ -123,6 +123,9 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="RSelectBitmap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Autostart.h">
@@ -297,6 +300,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="IndexedMapVector.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RSelectBitmap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

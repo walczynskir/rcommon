@@ -271,6 +271,7 @@ copy %CPP_PATH_DEV%\src\$(ProjectName)\$(OutDir)$(ProjectName)s.res %CPP_PATH_DE
     <ClCompile Include="RMessageBox.cpp" />
     <ClCompile Include="RPinWnd.cpp" />
     <ClCompile Include="RRawWnd.cpp" />
+    <ClCompile Include="RSelectBitmap.cpp" />
     <ClCompile Include="RSplitterWnd.cpp" />
     <ClCompile Include="RTheme.cpp" />
     <ClCompile Include="RTipData.cpp" />
@@ -330,6 +331,7 @@ copy %CPP_PATH_DEV%\src\$(ProjectName)\$(OutDir)$(ProjectName)s.res %CPP_PATH_DE
     <ClInclude Include="RPinWnd.h" />
     <ClInclude Include="RRawWnd.h" />
     <ClInclude Include="rrc.h" />
+    <ClInclude Include="RSelectBitmap.h" />
     <ClInclude Include="RSplitterData.h" />
     <ClInclude Include="RSplitterWnd.h" />
     <ClInclude Include="rstddef.h" />
