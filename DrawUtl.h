@@ -111,10 +111,8 @@ extern RCOMMON_API HBITMAP LoadImageFromResource(HINSTANCE a_hInstance, UINT a_i
 #define RAW_HIDE                     0x00020020
 #define RAW_ACTIVATE                 0x00000040
 
-#ifndef _WIN32_WCE
 extern RCOMMON_API BOOL AnimateWindow(HWND a_hWnd, DWORD a_dwTime, DWORD a_dwFlags, int a_iStep = 5);
 extern RCOMMON_API BOOL AnimateWindowEx(HWND a_hWnd, DWORD a_dwTime, DWORD a_dwFlags, LPSIZE a_pSize, int a_iStep = 5);
-#endif // of  !_WIN32_WCE
 
 
 extern RCOMMON_API HBITMAP ReplaceColor(HBITMAP a_hBmp, COLORREF a_clrBackOld, COLORREF a_clrBackNew);
@@ -128,14 +126,20 @@ extern RCOMMON_API void DrawStretchedBitmapTransparent(HDC a_hDC, const RECT& a_
 extern RCOMMON_API void DrawGradientRect(HDC a_hDC, const RECT& a_rect, COLORREF a_clr1, COLORREF a_clr2);
 extern RCOMMON_API void DrawTransparentAlphaBlend(HDC a_hDC, int a_x, int a_y, HBITMAP a_hBmp, BYTE a_btSrcAlpha);
 
-#ifndef _WIN32_WCE
 extern RCOMMON_API int DrawTextRotated(HDC a_hDC, LPCTSTR a_psText, int a_iLen, const LPPOINT a_pPt, const LPSIZE a_pSize, UINT a_iFmt, int a_iAngle);
-#endif // of  !_WIN32_WCE
 
 // region functions
-#ifndef _WIN32_WCE
-HRGN CreateRegionFromBitmap(HBITMAP a_hBmp, COLORREF a_clrTransp);
-HRGN CreateRegionFromBitmap(HBITMAP a_hBmp, const POINT& a_ptTransp);
-#endif // of  !_WIN32_WCE
+extern RCOMMON_API HRGN CreateRegionFromBitmap(HBITMAP a_hBmp, COLORREF a_clrTransp);
+extern RCOMMON_API HRGN CreateRegionFromBitmap(HBITMAP a_hBmp, const POINT& a_ptTransp);
+
+//
+// for lightening / transforming background with alphablending:
+// whitening (RGB(255, 255, 255))
+//  darkening (RGB(255, 255, 255)) 
+// tinting (other colors)
+// use it after painting background
+// higher a_btAlpha - more effect.
+//
+extern RCOMMON_API void BlendOverlay(HDC a_hDC, RECT a_rect, COLORREF a_clr, BYTE a_btAlpha);
 
 } // end of namespace

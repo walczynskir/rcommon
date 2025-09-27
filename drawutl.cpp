@@ -7,11 +7,14 @@
 #include <olectl.h>
 #include <windows.h>
 #include <wincodec.h>  // WIC
+#include <wingdi.h>     // For BLENDFUNCTION
+
 
 
 const int cc_nHMInch = 2540;
 const double cc_fPi = 3.1415926;
 
+#pragma comment(lib, "Msimg32.lib") // Required for AlphaBlend
 
 
 namespace RDraw
@@ -268,9 +271,7 @@ DrawCell(
 	if (l_iFormat == 0)
 	{
 		l_iFormat = DT_CENTER | DT_SINGLELINE | DT_VCENTER;
-#ifndef _WIN32_WCE
 		l_iFormat |= DT_END_ELLIPSIS;
-#endif
 	}
 
 	::InflateRect(&l_rect, -a_text.nMargin, 0);
@@ -401,11 +402,7 @@ DrawButtonBorder(
 	UINT l_iState = DFCS_BUTTONPUSH;
 	if (a_bFlat)
 	{
-#ifdef _WIN32_WCE
-	ASSERT(FALSE);	// unsupported currently on WIN CE
-#else
 		l_iState |= DFCS_FLAT;
-#endif
 	}
 
 	if (a_bDisabled)
@@ -418,13 +415,8 @@ DrawButtonBorder(
 	}
 	else if (a_bHot & a_bFlat)
 	{
-#ifdef _WIN32_WCE
-	ASSERT(FALSE);	// unsupported currently on WIN CE
-#else
 		l_iState ^= DFCS_FLAT;
-#endif
 	}
-
 
 	::DrawFrameControl(a_hDC, &l_rect, DFC_BUTTON, l_iState);
 }
@@ -465,7 +457,6 @@ GetBitmap(
 }
 
 
-#ifndef _WIN32_WCE
 BOOL AnimateWindow(HWND a_hWnd, DWORD a_dwTime, DWORD a_dwFlags, int a_iStep)
 {
 	RECT l_rect;
@@ -605,7 +596,6 @@ bool GetNextAnimStep(LPANIMATE a_pAnimate)
 		(a_pAnimate->sizeLast.cy < 0) :
 		(a_pAnimate->sizeLast.cy > RectHeight(a_pAnimate->rectStart))) || l_bFinish);
 }
-#endif // of !_WIN32_WCE
 
 #undef FlagSet
 
@@ -967,7 +957,6 @@ HBITMAP LoadImageFromResource(HINSTANCE a_hInstance, UINT a_idResource, LPCTSTR 
 	return l_hBitmap;
 }
 
-#ifndef _WIN32_WCE
 int DrawTextRotated(HDC a_hDC, LPCTSTR a_psText, int a_iLen, const LPPOINT a_pPt, const LPSIZE a_pSize, UINT a_iFmt, int a_iAngle)
 {
 	int l_iGMOrg = ::SetGraphicsMode(a_hDC, GM_ADVANCED);
@@ -995,10 +984,8 @@ int DrawTextRotated(HDC a_hDC, LPCTSTR a_psText, int a_iLen, const LPPOINT a_pPt
 	::SetGraphicsMode(a_hDC, l_iGMOrg);
 	return l_iSts;
 }
-#endif // of  !_WIN32_WCE
 
 
-#ifndef _WIN32_CE 
 // region functions
 
 static inline HRGN InternalCreateRegion(HDC a_hdcMem, COLORREF a_clrTransp, const SIZE& a_sizeBmp);
@@ -1100,7 +1087,33 @@ HRGN InternalCreateRegion(HDC a_hdcMem, COLORREF a_clrTransp, const SIZE& a_size
 
 	return l_hrgnBitmap;
 }
-#endif // of  !_WIN32_WCE
+
+
+
+void BlendOverlay(HDC a_hDC, RECT a_rect, COLORREF a_clr, BYTE a_btAlpha)
+{
+	// Create a memory DC and compatible bitmap
+	HDC l_hdcOverlay = ::CreateCompatibleDC(a_hDC);
+	HBITMAP l_hBmpOverlay = ::CreateCompatibleBitmap(a_hDC, a_rect.right - a_rect.left, a_rect.bottom - a_rect.top);
+	HBITMAP l_hBmpOld = (HBITMAP)::SelectObject(l_hdcOverlay, l_hBmpOverlay);
+
+	// Fill the overlay with the desired color
+	HBRUSH l_hBrush = ::CreateSolidBrush(a_clr);
+	::FillRect(l_hdcOverlay, &a_rect, l_hBrush);
+	::DeleteObject(l_hBrush);
+
+	// Set up blending function
+	BLENDFUNCTION l_blend = { AC_SRC_OVER, 0, a_btAlpha, 0 };
+
+	// Apply the overlay
+	::AlphaBlend(a_hDC, a_rect.left, a_rect.top, a_rect.right - a_rect.left, a_rect.bottom - a_rect.top,
+		l_hdcOverlay, a_rect.left, a_rect.top, a_rect.right - a_rect.left, a_rect.bottom - a_rect.top, l_blend);
+
+	// Cleanup
+	::SelectObject(l_hdcOverlay, l_hBmpOld);
+	::DeleteObject(l_hBmpOverlay);
+	::DeleteDC(l_hdcOverlay);
+}
 
 
 

@@ -73,7 +73,6 @@ HRESULT RTheme::DrawText(HDC a_hDC, int a_iPartId, int a_iStateId, LPCTSTR a_sTe
 	long l_iLen = static_cast<long>(_tcslen(a_sText));
 	wchar_t* l_wsText = new wchar_t[l_iLen + 1];
 
-	//TODO : why there is conversion to wide char / or opposite?
 #ifdef _UNICODE
 		wcsncpy_s(l_wsText, l_iLen + 1, a_sText, _TRUNCATE);
 #else
