@@ -180,7 +180,7 @@ public:
 	BOOL	DrawBk(HWND a_hWnd, HDC a_hDC, LPRECT a_pRect) 
 		{ return (m_procDrawBk == NULL) ? FALSE : m_procDrawBk(a_hWnd, a_hDC, m_pDrawBkObj, a_pRect); };
 	BOOL	DrawGrid(HWND a_hWnd, HDC a_hDC, LPRLGRID a_pGrid) 
-		{ return (m_procGrid == NULL) ? FALSE : m_procGrid(a_hWnd, a_hDC, m_pDrawObj, a_pGrid); };
+		{ return (m_procGrid == NULL) ? FALSE : m_procGrid(a_hWnd, a_hDC, m_pGridObj, a_pGrid); };
 
 	BOOL  GetRectCalculated() const { return m_bitInnerMode.to_ulong() & IM_RECTCALCULATED; };
 	void  SetRectCalculated(BOOL a_bCalc) { a_bCalc ? m_bitInnerMode |= IM_RECTCALCULATED : m_bitInnerMode &= (IM_RECTCALCULATED ^ 0xFFFF); } ;

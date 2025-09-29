@@ -114,8 +114,7 @@ static void FollowLink(HWND a_hWnd);
 #define HasWindowStyle(a_hWnd, a_iStyle) ((::GetWindowLong(a_hWnd, GWL_STYLE) & a_iStyle) == a_iStyle)
 
 
-//TODO: Focusable
-//TODO: Notify commands
+//TODO: Make Control focusable
 
 //	---------------------------------------------------------------------------
 //	Rejestracja klasy

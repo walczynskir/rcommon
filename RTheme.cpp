@@ -46,7 +46,7 @@ RTheme::Initialize()
 		return true;
 	}
 
-	// TODO: probably there is nolonger need to use address of functions, as this library is not longer supporting WIndowsCE, 2000, XP
+	// TODO: replace with casual calls instead of pointers to functions
 	s_pfCloseData = (CTDPROC)::GetProcAddress(l_hModule, "CloseThemeData");
 	s_pfDrawBackground = (DTBPROC)::GetProcAddress(l_hModule, "DrawThemeBackground");
 	s_pfDrawBackgroundEx = (DTBEPROC)::GetProcAddress(l_hModule, "DrawThemeBackgroundEx");

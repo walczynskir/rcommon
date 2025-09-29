@@ -1,108 +1,111 @@
 #pragma once
 #include <rcommon/rcommon.h>
 #include <tchar.h>
+#include <windows.h>
 #include <rcommon/rstring.h>
+
+#include <objidl.h>      // Required for IStream
+#include <gdiplus.h>	// for gdi+ drawing
 
 
 namespace RDraw
 {
-
-struct DpiContext
-{
-    float m_fScale = 1.0f;
-
-    explicit DpiContext(HWND a_hWnd)
+    struct DpiContext
     {
-        m_fScale = static_cast<float>(::GetDpiForWindow(a_hWnd)) / 96.0f;
-    }
+        float m_fScale = 1.0f;
 
-    int Scale(int value) const { return static_cast<int>(value * m_fScale); }
+        explicit DpiContext(HWND a_hWnd)
+        {
+            m_fScale = static_cast<float>(::GetDpiForWindow(a_hWnd)) / 96.0f;
+        }
 
-    RECT ScaleRect(const RECT& r) const
+        int Scale(int value) const { return static_cast<int>(value * m_fScale); }
+
+        RECT ScaleRect(const RECT& r) const
+        {
+            return {
+                Scale(r.left),
+                Scale(r.top),
+                Scale(r.right),
+                Scale(r.bottom)
+            };
+        }
+
+        SIZE ScaleSize(const SIZE& s) const
+        {
+            return { Scale(s.cx), Scale(s.cy) };
+        }
+
+        POINT ScalePoint(const POINT& p) const
+        {
+            return { Scale(p.x), Scale(p.y) };
+        }
+    };
+
+
+
+    typedef struct S_CLR3DBUTTON
     {
-        return {
-            Scale(r.left),
-            Scale(r.top),
-            Scale(r.right),
-            Scale(r.bottom)
-        };
-    }
+        COLORREF clrFace;
+        COLORREF clrBorderLeftUp;
+        COLORREF clrBorderRightDown;
+        COLORREF clrText;
+    } CLR3DBUTTON, * LPCLR3DBUTTON;
 
-    SIZE ScaleSize(const SIZE& s) const
+    typedef struct S_CLRCELL
     {
-        return { Scale(s.cx), Scale(s.cy) };
-    }
+        COLORREF clrBk;
+        COLORREF clrBorderLeft;
+        COLORREF clrBorderRight;
+        COLORREF clrBorderTop;
+        COLORREF clrBorderBottom;
+    } CLRCELL, * LPCLRCELL;
 
-    POINT ScalePoint(const POINT& p) const
+    typedef struct S_TEXTCELL
     {
-        return { Scale(p.x), Scale(p.y) };
-    }
-};
+        COLORREF	clrText;
+        HFONT		hFont;
+        tstring		sText;
+        UINT		iFormat;	// like DrawText formats
+        short		nMargin;
+    } TEXTCELL, * LPTEXTCELL;
 
 
-
-typedef struct S_CLR3DBUTTON
-{
-	COLORREF clrFace;
-	COLORREF clrBorderLeftUp;
-	COLORREF clrBorderRightDown;
-	COLORREF clrText;
-} CLR3DBUTTON, *LPCLR3DBUTTON;
-
-typedef struct S_CLRCELL
-{
-	COLORREF clrBk;
-	COLORREF clrBorderLeft;
-	COLORREF clrBorderRight;
-	COLORREF clrBorderTop;
-	COLORREF clrBorderBottom;
-} CLRCELL, *LPCLRCELL;
-
-typedef struct S_TEXTCELL
-{
-	COLORREF	clrText;
-	HFONT		hFont;
-	tstring		sText;
-	UINT		iFormat;	// like DrawText formats
-	short		nMargin;
-} TEXTCELL, *LPTEXTCELL;
+    extern RCOMMON_API int DrawTextDPI(HDC a_hDC, LPCTSTR a_psText, int a_iLen, const LPPOINT a_pPt, const LPSIZE a_pSize, UINT a_iFmt, const DpiContext& a_dpi);
 
 
-extern RCOMMON_API int DrawTextDPI(HDC a_hDC, LPCTSTR a_psText, int a_iLen, const LPPOINT a_pPt, const LPSIZE a_pSize, UINT a_iFmt, const DpiContext& a_dpi);
+    extern RCOMMON_API void Draw3DRect(HDC a_hDC, const RECT& a_rect, COLORREF a_clrTopLeft,
+        COLORREF a_clrBottomRight);
+    extern RCOMMON_API void Draw3DRect(HDC a_hDC, int a_x, int a_y, int a_cx, int a_cy, COLORREF a_clrTopLeft,
+        COLORREF a_clrBottomRight);
+    extern RCOMMON_API void DrawBorderRect(HDC a_hDC, int a_x, int a_y, int a_cx, int a_cy, COLORREF a_clrLeft,
+        COLORREF a_clrRight, COLORREF a_clrTop, COLORREF a_clrBottom);
+    extern RCOMMON_API void DrawBorderRect(HDC a_hDC, const RECT& a_rect, COLORREF a_clrLeft,
+        COLORREF a_clrRight, COLORREF a_clrTop, COLORREF a_clrBottom);
+    extern RCOMMON_API void DrawFrame(HDC a_hDC, const RECT& a_rect, COLORREF a_clr);
+    extern RCOMMON_API void DrawConvexRect(HDC	a_hDC, const RECT& a_rect);
+
+    extern RCOMMON_API void FillSolidRect(HDC a_hDC, int a_x, int a_y, int a_cx, int a_cy, COLORREF a_clr);
+    extern RCOMMON_API void FillSolidRect(HDC a_hDC, const RECT& a_rect, COLORREF a_clr);
+
+    extern RCOMMON_API void DrawSunkenRect(HDC a_hDC, const RECT& a_rect);
+    extern RCOMMON_API void DrawSunkenLine(HDC a_hDC, const POINT& a_ptStart, int a_iWidth, BOOL a_bVertical);
+
+    extern RCOMMON_API void Draw3DButton(HDC a_hDC, const RECT& a_rect, LPCLR3DBUTTON a_pClrs,
+        HFONT a_hFont, const tstring& a_sText = _T(""), BOOL a_bSelected = FALSE);
+    extern RCOMMON_API void DrawButton(HDC a_hDC, const RECT& a_rect, LPCLR3DBUTTON a_pClrs,
+        HFONT a_hFont, const tstring& a_sText = _T(""), BOOL a_bTransparent = FALSE);
+
+    extern RCOMMON_API void DrawCell(HDC a_hDC, const RECT& a_rect, const CLRCELL& a_clrs, const TEXTCELL& a_text,
+        BOOL a_bTransparent = FALSE, BOOL a_bBorder = TRUE);
+
+    extern RCOMMON_API void DrawButtonBorder(HDC a_hDC, const RECT& a_rect, bool a_bPushed, bool a_bDisabled, bool a_bFlat, bool a_bHot);
+
+    extern RCOMMON_API HBITMAP GetBitmap(HBITMAP a_hBmp, UINT a_x, UINT a_y, UINT a_dx, UINT a_dy);
+    extern RCOMMON_API HBITMAP LoadImageFromResource(HINSTANCE a_hInstance, UINT a_idResource, LPCTSTR a_sResourceType);
 
 
-extern RCOMMON_API void Draw3DRect(HDC a_hDC, const RECT& a_rect, COLORREF a_clrTopLeft, 
-	COLORREF a_clrBottomRight);
-extern RCOMMON_API void Draw3DRect(HDC a_hDC, int a_x, int a_y, int a_cx, int a_cy, COLORREF a_clrTopLeft, 
-	COLORREF a_clrBottomRight);
-extern RCOMMON_API void DrawBorderRect(HDC a_hDC, int a_x, int a_y, int a_cx, int a_cy, COLORREF a_clrLeft, 
-	COLORREF a_clrRight, COLORREF a_clrTop, COLORREF a_clrBottom);
-extern RCOMMON_API void DrawBorderRect(HDC a_hDC, const RECT& a_rect, COLORREF a_clrLeft, 
-	COLORREF a_clrRight, COLORREF a_clrTop, COLORREF a_clrBottom);
-extern RCOMMON_API void DrawFrame(HDC a_hDC, const RECT& a_rect, COLORREF a_clr);
-extern RCOMMON_API void DrawConvexRect(HDC	a_hDC, const RECT& a_rect);
-
-extern RCOMMON_API void FillSolidRect(HDC a_hDC, int a_x, int a_y, int a_cx, int a_cy, COLORREF a_clr);
-extern RCOMMON_API void FillSolidRect(HDC a_hDC, const RECT& a_rect, COLORREF a_clr);
-
-extern RCOMMON_API void DrawSunkenRect(HDC a_hDC, const RECT& a_rect);
-extern RCOMMON_API void DrawSunkenLine(HDC a_hDC, const POINT& a_ptStart, int a_iWidth, BOOL a_bVertical);
-
-extern RCOMMON_API void Draw3DButton(HDC a_hDC, const RECT& a_rect, LPCLR3DBUTTON a_pClrs,
-	HFONT a_hFont, const tstring& a_sText = _T(""), BOOL a_bSelected = FALSE);
-extern RCOMMON_API void DrawButton(HDC a_hDC, const RECT& a_rect, LPCLR3DBUTTON a_pClrs,	
-	HFONT a_hFont, const tstring& a_sText = _T(""), BOOL a_bTransparent = FALSE);
-
-extern RCOMMON_API void DrawCell(HDC a_hDC, const RECT& a_rect, const CLRCELL& a_clrs, const TEXTCELL& a_text, 
-	BOOL a_bTransparent = FALSE, BOOL a_bBorder = TRUE);
-
-extern RCOMMON_API void DrawButtonBorder(HDC a_hDC, const RECT& a_rect, bool a_bPushed, bool a_bDisabled, bool a_bFlat, bool a_bHot);
-
-extern RCOMMON_API HBITMAP GetBitmap(HBITMAP a_hBmp, UINT a_x, UINT a_y, UINT a_dx, UINT a_dy);
-extern RCOMMON_API HBITMAP LoadImageFromResource(HINSTANCE a_hInstance, UINT a_idResource, LPCTSTR a_sResourceType);
-
-
-// like in Windows SDK AnimateWindow
+    // like in Windows SDK AnimateWindow
 #define RAW_HOR_POSITIVE             0x00000001
 #define RAW_HOR_NEGATIVE             0x00000002
 #define RAW_VER_POSITIVE             0x00000004
@@ -111,35 +114,47 @@ extern RCOMMON_API HBITMAP LoadImageFromResource(HINSTANCE a_hInstance, UINT a_i
 #define RAW_HIDE                     0x00020020
 #define RAW_ACTIVATE                 0x00000040
 
-extern RCOMMON_API BOOL AnimateWindow(HWND a_hWnd, DWORD a_dwTime, DWORD a_dwFlags, int a_iStep = 5);
-extern RCOMMON_API BOOL AnimateWindowEx(HWND a_hWnd, DWORD a_dwTime, DWORD a_dwFlags, LPSIZE a_pSize, int a_iStep = 5);
+    extern RCOMMON_API BOOL AnimateWindow(HWND a_hWnd, DWORD a_dwTime, DWORD a_dwFlags, int a_iStep = 5);
+    extern RCOMMON_API BOOL AnimateWindowEx(HWND a_hWnd, DWORD a_dwTime, DWORD a_dwFlags, LPSIZE a_pSize, int a_iStep = 5);
 
 
-extern RCOMMON_API HBITMAP ReplaceColor(HBITMAP a_hBmp, COLORREF a_clrBackOld, COLORREF a_clrBackNew);
-extern RCOMMON_API HBITMAP LoadPicture(LPCTSTR a_sPictureFile, COLORREF a_clrBack, LPSIZE a_pSize);
+    extern RCOMMON_API HBITMAP ReplaceColor(HBITMAP a_hBmp, COLORREF a_clrBackOld, COLORREF a_clrBackNew);
+    extern RCOMMON_API HBITMAP LoadPicture(LPCTSTR a_sPictureFile, COLORREF a_clrBack, LPSIZE a_pSize);
 
-extern RCOMMON_API void DrawBitmap(HDC a_hDC, const POINT& a_pt, HBITMAP a_hBmp, DWORD a_dwRop);
-extern RCOMMON_API BOOL DrawBitmapTransparent(HDC a_hDC, const POINT& a_pt, HBITMAP a_hBmp, COLORREF a_clrTransparent);
-extern RCOMMON_API BOOL DrawBitmapTransparent(HDC a_hDC, int a_x, int a_y, HBITMAP a_hBmp, COLORREF a_clrTransparent);
-extern RCOMMON_API void DrawStretchedBitmap(HDC a_hDC, const RECT& a_rect, HBITMAP a_hBmp, DWORD a_dwRop);
-extern RCOMMON_API void DrawStretchedBitmapTransparent(HDC a_hDC, const RECT& a_rect, HBITMAP a_hBmp, COLORREF a_clrTransparent);
-extern RCOMMON_API void DrawGradientRect(HDC a_hDC, const RECT& a_rect, COLORREF a_clr1, COLORREF a_clr2);
-extern RCOMMON_API void DrawTransparentAlphaBlend(HDC a_hDC, int a_x, int a_y, HBITMAP a_hBmp, BYTE a_btSrcAlpha);
+    extern RCOMMON_API void DrawBitmap(HDC a_hDC, const POINT& a_pt, HBITMAP a_hBmp, DWORD a_dwRop);
+    extern RCOMMON_API BOOL DrawBitmapTransparent(HDC a_hDC, const POINT& a_pt, HBITMAP a_hBmp, COLORREF a_clrTransparent);
+    extern RCOMMON_API BOOL DrawBitmapTransparent(HDC a_hDC, int a_x, int a_y, HBITMAP a_hBmp, COLORREF a_clrTransparent);
+    extern RCOMMON_API void DrawStretchedBitmap(HDC a_hDC, const RECT& a_rect, HBITMAP a_hBmp, DWORD a_dwRop);
+    extern RCOMMON_API void DrawStretchedBitmapTransparent(HDC a_hDC, const RECT& a_rect, HBITMAP a_hBmp, COLORREF a_clrTransparent);
+    extern RCOMMON_API void DrawGradientRect(HDC a_hDC, const RECT& a_rect, COLORREF a_clr1, COLORREF a_clr2);
+    extern RCOMMON_API void DrawTransparentAlphaBlend(HDC a_hDC, int a_x, int a_y, HBITMAP a_hBmp, BYTE a_btSrcAlpha);
 
-extern RCOMMON_API int DrawTextRotated(HDC a_hDC, LPCTSTR a_psText, int a_iLen, const LPPOINT a_pPt, const LPSIZE a_pSize, UINT a_iFmt, int a_iAngle);
+    extern RCOMMON_API int DrawTextRotated(HDC a_hDC, LPCTSTR a_psText, int a_iLen, const LPPOINT a_pPt, const LPSIZE a_pSize, UINT a_iFmt, int a_iAngle);
 
-// region functions
-extern RCOMMON_API HRGN CreateRegionFromBitmap(HBITMAP a_hBmp, COLORREF a_clrTransp);
-extern RCOMMON_API HRGN CreateRegionFromBitmap(HBITMAP a_hBmp, const POINT& a_ptTransp);
+    // region functions
+    extern RCOMMON_API HRGN CreateRegionFromBitmap(HBITMAP a_hBmp, COLORREF a_clrTransp);
+    extern RCOMMON_API HRGN CreateRegionFromBitmap(HBITMAP a_hBmp, const POINT& a_ptTransp);
 
+    //
+    // for lightening / transforming background with alphablending:
+    // whitening (RGB(255, 255, 255))
+    //  darkening (RGB(255, 255, 255)) 
+    // tinting (other colors)
+    // use it after painting background
+    // higher a_btAlpha - more effect.
+    //
+    extern RCOMMON_API void BlendOverlay(HDC a_hDC, RECT a_rect, COLORREF a_clr, BYTE a_btAlpha);
+
+
+// hand drawn lines
+// requires GDI+, hence also calling
+// at the start of app:	
+//      GdiplusStartupInput gdiplusStartupInput;
+//      GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, nullptr);
+// at the exit: 	
+//      GdiplusShutdown(gdiplusToken);
 //
-// for lightening / transforming background with alphablending:
-// whitening (RGB(255, 255, 255))
-//  darkening (RGB(255, 255, 255)) 
-// tinting (other colors)
-// use it after painting background
-// higher a_btAlpha - more effect.
-//
-extern RCOMMON_API void BlendOverlay(HDC a_hDC, RECT a_rect, COLORREF a_clr, BYTE a_btAlpha);
+    extern RCOMMON_API void DrawSketchLineGDIPlus(Gdiplus::Graphics* a_graphics, POINT a_ptStart, POINT a_ptEnd,
+        int a_iWobble = 2, int a_iSegments = 60, float a_fThickness = 2.0f, Gdiplus::Color a_color = Gdiplus::Color(255, 0, 0, 0));
 
 } // end of namespace
