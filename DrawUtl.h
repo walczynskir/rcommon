@@ -146,7 +146,7 @@ namespace RDraw
     extern RCOMMON_API void BlendOverlay(HDC a_hDC, RECT a_rect, COLORREF a_clr, BYTE a_btAlpha);
 
 
-// hand drawn lines
+// GDI+ functions below
 // requires GDI+, hence also calling
 // at the start of app:	
 //      GdiplusStartupInput gdiplusStartupInput;
@@ -154,7 +154,14 @@ namespace RDraw
 // at the exit: 	
 //      GdiplusShutdown(gdiplusToken);
 //
-    extern RCOMMON_API void DrawSketchLineGDIPlus(Gdiplus::Graphics* a_graphics, POINT a_ptStart, POINT a_ptEnd,
-        int a_iWobble = 2, int a_iSegments = 60, float a_fThickness = 2.0f, Gdiplus::Color a_color = Gdiplus::Color(255, 0, 0, 0));
+
+    extern RCOMMON_API void DrawSketchLine(HDC a_hDC, POINT a_ptStart, POINT a_ptEnd,
+        int a_iWobble = 2, int a_iSegments = 60, float a_fThickness = 2.0f, COLORREF a_color = RGB(0, 0, 0), BYTE a_btAlpha = 255);
+
+ 
+    extern RCOMMON_API void DrawSmartText(HDC a_hDC, LPCTSTR a_sFont, int a_iFontSize, const RECT& a_rectLayout, LPCTSTR a_sText,
+        COLORREF a_colorText = RGB(255, 255, 255), BYTE a_btAlphaText = 255,      // main text
+        COLORREF a_colorOutline = RGB(0, 0, 0), BYTE a_btAlphaOutline = 255);      // outline (black)
+  
 
 } // end of namespace

@@ -50,7 +50,7 @@ public:
 		{
 			::FreeLibrary(l_hLookupMod);
 		}
-		return std::format(_T("{} - {}: {}"), m_sMsg, m_dwCode, l_sMsg);
+		return FormatTextT(_T("{} - {}: {}"), m_sMsg, m_dwCode, l_sMsg);
 	};
 
 private:

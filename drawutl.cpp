@@ -8,6 +8,7 @@
 #include <windows.h>
 #include <wincodec.h>  // WIC
 #include <wingdi.h>     // For BLENDFUNCTION
+
 #pragma comment(lib, "Msimg32.lib") // Required for AlphaBlend
 #pragma comment(lib, "gdiplus.lib")
 
@@ -1121,8 +1122,7 @@ namespace RDraw
 
 
 
-void DrawSketchLineGDIPlus(Gdiplus::Graphics* a_graphics, POINT a_ptStart, POINT a_ptEnd, int a_iWobble, int a_iSegments, float a_fThickness, Gdiplus::Color a_color)
-
+void DrawSketchLine(Gdiplus::Graphics* a_graphics, POINT a_ptStart, POINT a_ptEnd, int a_iWobble, int a_iSegments, float a_fThickness, Gdiplus::Color a_color)
 {
 	Gdiplus::Pen l_pen(a_color, a_fThickness);
 	l_pen.SetStartCap(Gdiplus::LineCapRound);
@@ -1155,5 +1155,75 @@ void DrawSketchLineGDIPlus(Gdiplus::Graphics* a_graphics, POINT a_ptStart, POINT
 }
 
 
+void DrawSketchLine(HDC a_hDC, POINT a_ptStart, POINT a_ptEnd,
+	int a_iWobble, int a_iSegments, float a_fThickness, COLORREF a_color, BYTE a_btAlpha)
+{
+	Gdiplus::Graphics l_graphics(a_hDC);
+
+	DrawSketchLine(&l_graphics, a_ptStart, a_ptEnd, a_iWobble, a_iSegments, a_fThickness, Gdiplus::Color(a_btAlpha, GetRValue(a_color), GetGValue(a_color), GetBValue(a_color)));
+}
+
+
+
+
+void DrawSmartText(Gdiplus::Graphics* a_graphics, const Gdiplus::Font& a_font, const Gdiplus::RectF& a_rectLayout, LPCTSTR a_sText,
+	const Gdiplus::Color& a_colorText,		// main text
+	const Gdiplus::Color& a_colorOutline)	// outline (black)
+{
+	Gdiplus::StringFormat l_format;
+	l_format.SetAlignment(Gdiplus::StringAlignmentCenter);
+	l_format.SetLineAlignment(Gdiplus::StringAlignmentCenter);
+
+#ifdef _UNICODE
+	std::wstring l_wsText(a_sText);
+#else
+	int l_iLen = ::MultiByteToWideChar(CP_UTF8, 0, a_sText, -1, nullptr, 0);
+	std::wstring l_wsText(l_iLen, L'\0');
+	::MultiByteToWideChar(CP_UTF8, 0, a_sText, -1, l_wsText.data(), l_iLen);
+#endif
+
+	// Simulate outline by drawing text offset in 8 directions
+	const float l_fOffset = 1.0f;
+	for (int l_dx = -1; l_dx <= 1; ++l_dx)
+	{
+		for (int l_dy = -1; l_dy <= 1; ++l_dy)
+		{
+			if (l_dx == 0 && l_dy == 0) continue; // skip center
+			Gdiplus::RectF l_rectOutline = a_rectLayout;
+			l_rectOutline.X += l_dx * l_fOffset;
+			l_rectOutline.Y += l_dy * l_fOffset;
+			Gdiplus::SolidBrush l_brushOutline(a_colorOutline);
+			a_graphics->DrawString(l_wsText.c_str(), -1, &a_font, l_rectOutline, &l_format, &l_brushOutline);
+		}
+	}
+
+	// Draw main text
+	Gdiplus::SolidBrush l_brushText(a_colorText);
+	a_graphics->DrawString(l_wsText.c_str(), -1, &a_font, a_rectLayout, &l_format, &l_brushText);
+}
+
+void DrawSmartText(HDC a_hDC, LPCTSTR a_sFont, int a_iFontSize, const RECT& a_rectLayout, LPCTSTR a_sText,
+	COLORREF a_colorText, BYTE a_btAlphaText, COLORREF a_colorOutline, BYTE a_btAlphaOutline)
+{
+	Gdiplus::Graphics l_graphics(a_hDC);
+
+#ifdef _UNICODE
+	std::wstring l_wsFont(a_sFont);
+#else
+	int l_iLen = ::MultiByteToWideChar(CP_UTF8, 0, a_sFont, -1, nullptr, 0);
+	std::wstring l_wsFont(l_iLen, L'\0');
+	::MultiByteToWideChar(CP_UTF8, 0, a_sFont, -1, l_wsFont.data(), l_iLen);
+#endif
+
+	Gdiplus::Font l_font(l_wsFont.c_str(), static_cast<Gdiplus::REAL>(a_iFontSize));
+	Gdiplus::RectF l_rectLayout(static_cast<Gdiplus::REAL>(a_rectLayout.left), static_cast<Gdiplus::REAL>(a_rectLayout.top), static_cast<Gdiplus::REAL>(RectWidth(a_rectLayout)), static_cast<Gdiplus::REAL>(RectHeight(a_rectLayout)));
+
+	Gdiplus::Color l_colorText(a_btAlphaText, GetRValue(a_colorText), GetGValue(a_colorText), GetBValue(a_colorText));
+	Gdiplus::Color l_colorOutline(a_btAlphaOutline, GetRValue(a_colorOutline), GetGValue(a_colorOutline), GetBValue(a_colorOutline));
+
+
+	DrawSmartText(&l_graphics, l_font, l_rectLayout, a_sText, l_colorText, l_colorOutline);
+
+}
 
 } // end of namespace
