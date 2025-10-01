@@ -48,6 +48,9 @@ static HHOOK s_hook = NULL;
 static LRESULT CALLBACK HookMessageProc(int code, WPARAM wParam, LPARAM lParam);
 #endif
 
+BOOL RListCtrl_FilterMessages(HWND a_hWnd, UINT a_iMsg, WPARAM a_wParam, LPARAM a_lParam);
+
+
 // message handlers
 static inline BOOL	OnCreate(HWND a_hWnd, LPCREATESTRUCT a_lpStruct);
 static inline void	OnShowWindow(HWND a_hWnd, BOOL a_bShow);
@@ -123,10 +126,12 @@ static inline void			SetRListCtrlData(HWND a_hWnd, RListData* a_pData);
 
 
 // drawing - internal
-static inline void DrawBk(HWND a_hWnd, HDC a_hDC, LPRECT a_pRect);
+static inline void DrawBk_Deafult(HWND a_hWnd, HDC a_hDC, LPRECT a_pRect);
+static inline void DrawBackground(HWND a_hWnd, HDC a_hDC);
+
 static inline void DrawTracking(HWND a_hWnd, HDC a_hdc);
 static inline void DrawGrid(HWND a_hWnd, HDC a_hDC);
-static BOOL DrawGrid(HWND a_hWnd, HDC a_hDC, LPRLGRID a_pGrid);
+static BOOL DrawGrid_Default(HWND a_hWnd, HDC a_hDC, LPRLGRID a_pGrid);
 
 static inline void DrawRows(HWND a_hWnd, HDC a_dc);
 
@@ -233,6 +238,8 @@ RListCtrl_WndProc(
 	)
 {
 
+	if (RListCtrl_FilterMessages(a_hWnd, a_iMsg, a_wParam, a_lParam))
+		return 0;
 	switch (a_iMsg) 
 	{
 		case WM_CREATE:
@@ -458,6 +465,31 @@ RListCtrl_WndProc(
 }
 
 
+BOOL RListCtrl_FilterMessages(HWND a_hWnd, UINT a_iMsg, WPARAM /* a_wParam */, LPARAM /* a_lParam */)
+{
+	RListData* l_pData = GetRListCtrlData(a_hWnd);
+	if (l_pData == nullptr)
+		return FALSE;
+	if (l_pData->TestFlags(LMB_READONLY))
+		switch (a_iMsg)
+		{
+		case WM_KEYDOWN:
+		case WM_CHAR:
+		case WM_SYSKEYDOWN:
+		case WM_LBUTTONDOWN:
+		case WM_LBUTTONUP:
+		case WM_LBUTTONDBLCLK:
+		case WM_RBUTTONDOWN:
+		case WM_RBUTTONUP:
+		case WM_MOUSEMOVE:
+		case WM_SETFOCUS:
+		case WM_MOUSEACTIVATE:
+			return TRUE; // swallow input
+		}
+	return FALSE;
+	
+}
+
 
 /*	---------------------------------------------------------------------------------------
 	Registration of RListCtrl class
@@ -541,14 +573,28 @@ BOOL RListCtrl_DrawCell(HWND a_hWnd, HDC a_hDC, void* /*a_pObj*/, LPRLCELL a_pCe
 //	---------------------------------------------------------------------------------------
 //	Draws background
 //
+static inline void DrawBackground(HWND a_hWnd, HDC a_hDC)
+{
+	RECT l_rectWin;
+	::GetClientRect(a_hWnd, &l_rectWin);
+
+	// TODO potential for improvement - as it should draw only invalidated fragment
+	RListData* l_pData = GetRListCtrlData(a_hWnd);
+	l_pData->DrawBk(a_hWnd, a_hDC, &l_rectWin);
+
+}
+
+//	---------------------------------------------------------------------------------------
+//	Draws background
+//
 BOOL RListCtrl_DrawBk(HWND a_hWnd, HDC a_hDC, void* /*a_pObj*/, LPRECT a_pRectInv)
 {
-	DrawBk(a_hWnd, a_hDC, a_pRectInv);
+	DrawBk_Deafult(a_hWnd, a_hDC, a_pRectInv);
 	return TRUE;
 }
 
 
-void DrawBk(HWND a_hWnd, HDC a_hDC, LPRECT a_pRectInv)
+void DrawBk_Deafult(HWND a_hWnd, HDC a_hDC, LPRECT a_pRectInv)
 {
 	RListData* l_pData = GetRListCtrlData(a_hWnd);
 	COLORREF l_clrBk = (IsFocused(a_hWnd) ? l_pData->GetColor(RLC_BK_ACT) : l_pData->GetColor(RLC_BK_NOACT));
@@ -562,7 +608,7 @@ void DrawBk(HWND a_hWnd, HDC a_hDC, LPRECT a_pRectInv)
 //
 BOOL RListCtrl_DrawGrid(HWND a_hWnd, HDC a_hDC, void* /*a_pObj*/, LPRLGRID a_pGrid)
 {
-	DrawGrid(a_hWnd, a_hDC, a_pGrid);
+	DrawGrid_Default(a_hWnd, a_hDC, a_pGrid);
 	return TRUE;
 }
 
@@ -726,12 +772,8 @@ OnPaint(
 	PAINTSTRUCT l_ps;
 	HDC l_hdc = ::BeginPaint(a_hWnd, &l_ps);
 
-	RListData* l_pData = GetRListCtrlData(a_hWnd);
-	if (l_pData->GetColumnsCount() > 0 && l_pData->GetRowsCount() > 0)
-	{	// this block is needed also to correctly draw (to destroy RMemDC before EndPaint)
-#ifdef _WIN32_WCE
-	HDC l_hMemDC = l_hdc;
-#else
+
+	{	// this block is needed to destroy RMemDC before EndPaint
 	#ifdef _DEBUG 
 		HDC l_hMemDC = l_hdc;
 	#else	
@@ -741,11 +783,7 @@ OnPaint(
 		RMemDC l_memDC(l_hdc, &l_rectWin);
 		HDC l_hMemDC = l_memDC;
 	#endif
-#endif
-
-	l_pData->DrawBk(a_hWnd, l_hMemDC, &l_ps.rcPaint);
-
-	Draw(a_hWnd, l_hMemDC);
+		Draw(a_hWnd, l_hMemDC);
 	}
 	::EndPaint(a_hWnd, &l_ps);
 }
@@ -754,14 +792,19 @@ OnPaint(
 //	Really draws List control
 //
 void Draw(
-	HWND a_hWnd, 
+	HWND a_hWnd,
 	HDC a_hDC
-	)
+)
 {
 	CalculateDrawRect(a_hWnd);
-	DrawRows(a_hWnd, a_hDC);
-	DrawGrid(a_hWnd, a_hDC);
-	DrawTracking(a_hWnd, a_hDC);
+	DrawBackground(a_hWnd, a_hDC);
+	RListData* l_pData = GetRListCtrlData(a_hWnd);
+	if (l_pData->GetColumnsCount() > 0 && l_pData->GetRowsCount() > 0)
+	{
+		DrawRows(a_hWnd, a_hDC);
+		DrawGrid(a_hWnd, a_hDC);
+		DrawTracking(a_hWnd, a_hDC);
+	}
 }
 
 //	---------------------------------------------------------------------------------------
@@ -1323,7 +1366,7 @@ DrawGrid(
 //	Draws grid
 //
 static BOOL 
-DrawGrid(
+DrawGrid_Default(
 	HWND /*a_hWnd*/, 
 	HDC a_hDC, 
 	LPRLGRID a_pGrid
@@ -1424,7 +1467,7 @@ DrawCell(
 	// skonstruuj rectangla
 	RECT l_rect = GetCellRect(a_hWnd, a_iRow, a_iCol);
 	RLCELL l_cell;
-	BOOL l_bSelected = (l_pData->GetSelRow() == a_iRow);
+	BOOL l_bSelected = ((l_pData->GetSelRow() == a_iRow) && (!(l_pData->TestFlags(LMB_READONLY))));
 	BOOL l_bFixed = (a_iRow < l_pData->GetFixedRows()) || (a_iCol < l_pData->GetFixedCols());
 
 	// set colors

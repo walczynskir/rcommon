@@ -60,7 +60,7 @@ typedef struct S_RLCELL
 
 typedef const LPRLCELL LPCLRCELL;
 
-// flags 
+// flags / modes
 #define LMB_SAMEROWSHEIGHT	(0x001)	// all rows have the same height
 #define LMB_FILLLASTCOL		(0x002)	// last column expanded to match window length
 #define LMB_DRAWVLINES		(0x004)	// draw vertical lines 
@@ -77,6 +77,7 @@ typedef const LPRLCELL LPCLRCELL;
 #define LMB_DRAWCELLBORDER	(0x800)	// draws cell border
 #define LMB_MOVEONUP		(0x1000)	// moves selection on LeftButtonUp (not down)
 #define LMB_EDITABLE		(0x2000)	// editable grid
+#define LMB_READONLY		(0x4000)	// editable grid
 
 // grid states
 #define RLS_FOCUSED		(0x01)		// cell focused
