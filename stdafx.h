@@ -12,3 +12,6 @@
 #include <stdlib.h>
 #include <tchar.h>
 #include "rstddef.h"
+
+// Gdiplus 1.1
+#define GDIPVER 0x0110
