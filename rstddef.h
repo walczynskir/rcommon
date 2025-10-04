@@ -4,6 +4,30 @@
 
 #ifdef _DEBUG
 
+#ifdef _UNICODE
+
+#ifndef TRACE0
+#define TRACE0(a_sText) 	_RPTW0(_CRT_WARN, L##a_sText)
+#endif 
+
+#ifndef TRACE1
+#define TRACE1(a_sText, a_arg1) _RPTW1(_CRT_WARN, L##a_sText, a_arg1)
+#endif 
+
+#ifndef TRACE2
+#define TRACE2(a_sText, a_arg1, a_arg2) _RPTW2(_CRT_WARN, L##a_sText, a_arg1, a_arg2)
+#endif 
+
+#ifndef TRACE3
+#define TRACE3(a_sText, a_arg1, a_arg2, a_arg3) _RPTW3(_CRT_WARN, L##a_sText, a_arg1, a_arg2, a_arg3)
+#endif 
+
+#ifndef TRACE4
+#define TRACE4(a_sText, a_arg1, a_arg2, a_arg3, a_arg4) _RPTW4(_CRT_WARN, L##a_sText, a_arg1, a_arg2, a_arg3, a_arg4)
+#endif 
+
+#else
+
 #ifndef TRACE0
 #define TRACE0(a_sText) 	_RPT0(_CRT_WARN, a_sText)
 #endif 
@@ -22,6 +46,8 @@
 
 #ifndef TRACE4
 #define TRACE4(a_sText, a_arg1, a_arg2, a_arg3, a_arg4) _RPT4(_CRT_WARN, a_sText, a_arg1, a_arg2, a_arg3, a_arg4)
+#endif 
+
 #endif 
 
 #else //_DEBUG

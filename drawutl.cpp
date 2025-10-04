@@ -1202,20 +1202,15 @@ void DrawSmartText(Gdiplus::Graphics* a_graphics, const Gdiplus::Font& a_font, c
 	a_graphics->DrawString(l_wsText.c_str(), -1, &a_font, a_rectLayout, &l_format, &l_brushText);
 }
 
-void DrawSmartText(HDC a_hDC, LPCTSTR a_sFont, int a_iFontSize, const RECT& a_rectLayout, LPCTSTR a_sText,
+void DrawSmartText(HDC a_hDC, HFONT a_hFont, const RECT& a_rectLayout, LPCTSTR a_sText,
 	COLORREF a_colorText, BYTE a_btAlphaText, COLORREF a_colorOutline, BYTE a_btAlphaOutline)
 {
 	Gdiplus::Graphics l_graphics(a_hDC);
 
-#ifdef _UNICODE
-	std::wstring l_wsFont(a_sFont);
-#else
-	int l_iLen = ::MultiByteToWideChar(CP_UTF8, 0, a_sFont, -1, nullptr, 0);
-	std::wstring l_wsFont(l_iLen, L'\0');
-	::MultiByteToWideChar(CP_UTF8, 0, a_sFont, -1, l_wsFont.data(), l_iLen);
-#endif
+	LOGFONT l_lf{};
+	::GetObject(a_hFont, sizeof(LOGFONT), &l_lf);
+	Gdiplus::Font l_font(a_hDC, &l_lf); // TRUE = GDI logical units	Gdiplus::Font l_font(a_hDC, a_hFont);
 
-	Gdiplus::Font l_font(l_wsFont.c_str(), static_cast<Gdiplus::REAL>(a_iFontSize));
 	Gdiplus::RectF l_rectLayout(static_cast<Gdiplus::REAL>(a_rectLayout.left), static_cast<Gdiplus::REAL>(a_rectLayout.top), static_cast<Gdiplus::REAL>(RectWidth(a_rectLayout)), static_cast<Gdiplus::REAL>(RectHeight(a_rectLayout)));
 
 	Gdiplus::Color l_colorText(a_btAlphaText, GetRValue(a_colorText), GetGValue(a_colorText), GetBValue(a_colorText));

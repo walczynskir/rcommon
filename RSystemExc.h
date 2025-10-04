@@ -21,9 +21,9 @@ public:
 	{
 		DWORD	l_dwFmtRt		= 0;
 		DWORD	l_dwFlags		= FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_FROM_SYSTEM;
-		LPVOID	l_lpMsgBuf		= NULL;
+		LPTSTR	l_lpMsgBuf		= NULL;
 		HMODULE l_hLookupMod	= NULL;
-		tstring	l_sMsg			= _T("");
+		tstring	l_sMsg = _T("");
 
 		if(!m_sModule.empty())
 		{
@@ -50,7 +50,7 @@ public:
 		{
 			::FreeLibrary(l_hLookupMod);
 		}
-		return FormatTextT(_T("{} - {}: {}"), m_sMsg, m_dwCode, l_sMsg);
+		return FormatTextT("{} - {}: {}", m_sMsg.c_str(), m_dwCode, l_sMsg.c_str());
 	};
 
 private:

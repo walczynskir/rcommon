@@ -5,6 +5,7 @@
 #include <rcommon/rstring.h>
 
 #include <objidl.h>      // Required for IStream
+
 #include <gdiplus.h>	// for gdi+ drawing
 
 
@@ -159,7 +160,7 @@ namespace RDraw
         int a_iWobble = 2, int a_iSegments = 60, float a_fThickness = 2.0f, COLORREF a_color = RGB(0, 0, 0), BYTE a_btAlpha = 255);
 
  
-    extern RCOMMON_API void DrawSmartText(HDC a_hDC, LPCTSTR a_sFont, int a_iFontSize, const RECT& a_rectLayout, LPCTSTR a_sText,
+    extern RCOMMON_API void DrawSmartText(HDC a_hDC, HFONT a_hFont, const RECT& a_rectLayout, LPCTSTR a_sText,
         COLORREF a_colorText = RGB(255, 255, 255), BYTE a_btAlphaText = 255,      // main text
         COLORREF a_colorOutline = RGB(0, 0, 0), BYTE a_btAlphaOutline = 255);      // outline (black)
   

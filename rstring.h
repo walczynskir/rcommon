@@ -22,7 +22,8 @@
 
 
 #ifdef _UNICODE
-#define FormatTextT(fmt, ...) std::format(fmt, __VA_ARGS__)
+#define FormatTextT(fmt, ...) std::format(L##fmt, __VA_ARGS__)
 #else
 #define FormatTextT(fmt, ...) std::format(fmt, __VA_ARGS__)
 #endif
+
