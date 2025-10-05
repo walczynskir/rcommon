@@ -4,6 +4,9 @@
 
 
 
+extern RCOMMON_API void ExceptionMessageBox(HWND a_hWnd, LPCTSTR a_sMessage);
+
+
 class RCOMMON_API RCenteredMessageBox
 {
 public:
@@ -28,7 +31,8 @@ class RCOMMON_API RCustomMessageBox
 public:
     enum class Result {
         Yes = IDYES,
-        No = IDNO
+        No = IDNO,
+        Cancel = IDCANCEL
     };
 
     enum class IconType {
@@ -45,6 +49,18 @@ public:
         Screen
     };
 
+    enum class ButtonIdx {
+        First,      // returns IDYES
+        Second,     // return IDNO
+        Third       // returns IDCANCEL
+    };
+
+    enum class ButtonsCount {
+        One,
+        Two,
+        Three
+    };
+
     RCustomMessageBox(HINSTANCE a_hInst, HWND a_hParent);
     ~RCustomMessageBox(); // in header
 
@@ -59,13 +75,15 @@ public:
 
     void SetCaption(LPCTSTR a_sCaption);
     void SetMessage(LPCTSTR a_sMsg);
-    void SetYesLabel(LPCTSTR a_sYes);
-    void SetNoLabel(LPCTSTR a_sNo);
 
     void SetIcon(IconType a_iconType) { m_iconType = a_iconType; }
     void SetCenteredParent() { m_enCenterType = CenterType::Parent; }
     void SetScreenCentered() { m_enCenterType = CenterType::Screen; }
     void SetNonCentered() { m_enCenterType = CenterType::None; }
+    void SetButtonsCount(ButtonsCount a_count);
+    void SetButtonText(ButtonIdx a_idx, LPCTSTR a_sText);
+    void SetButtonDefault(ButtonIdx a_idx) ;
+    void SetButtonGap(LONG a_dxGap) {a_dxGap = a_dxGap;};
 
     Result Show();
 
@@ -74,6 +92,9 @@ public:
 private:
     static INT_PTR CALLBACK DialogProc(HWND a_hDlg, UINT a_iMsg, WPARAM a_wParam, LPARAM a_lParam);
     BOOL OnInitDialog();
+    void AdjustButtons();
+    void SetDefaultButton();
+
     void AdjustDialogSize();
     void CenterDialogScreen();
     void CenterDialogParent();
@@ -88,5 +109,7 @@ private:
     HWND m_hParent;
     IconType m_iconType = IconType::None;
     CenterType m_enCenterType = CenterType::None;
-
+    ButtonsCount m_count;
+    ButtonIdx m_idxDefault = ButtonIdx::First;
+    LONG m_dxGap = 20;
 };

@@ -15,3 +15,7 @@
 #define IDS_BOX_DECISION                        58009
 #define IDD_CUSTOM_MSGBOX						58010
 #define IDC_BOX_ICON							58011
+#define IDS_BOX_EXCEPTIONCAPTION				58012
+#define IDS_BOX_EXCEPTIONMESSAGE				58013
+#define IDS_BOX_BUTTONOK						58014
+

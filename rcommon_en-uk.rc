@@ -22,23 +22,27 @@ IDC_SPLITV         CURSOR         "res/SPLITV.CUR"
 
 STRINGTABLE
 BEGIN
-    IDS_COLOR_BTN           "&Other"
-    IDS_ERR_UNKNOWN         "Unknown error."
-    IDS_PIN_OFF             "Turn off Always on Top"
-    IDS_PIN_ON              "Turn on Always on Top"
-    IDS_BOX_WARNING         "Warning"
-    IDS_BOX_DECISION        "Decision"
+    IDS_COLOR_BTN                   "&Other"
+    IDS_ERR_UNKNOWN                 "Unknown error."
+    IDS_PIN_OFF                     "Turn off Always on Top"
+    IDS_PIN_ON                      "Turn on Always on Top"
+    IDS_BOX_WARNING                 "Warning"
+    IDS_BOX_DECISION                "Decision"
+    IDS_BOX_EXCEPTIONCAPTION        "Unexpected exception"
+    IDS_BOX_EXCEPTIONMESSAGE        "Unknown exception occured. Save game and restart application."
+    IDS_BOX_BUTTONOK			    "Ok"
 END
 
 
-IDD_CUSTOM_MSGBOX DIALOGEX 0, 0, 180, 70
+IDD_CUSTOM_MSGBOX DIALOGEX 0, 0, 210, 70
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Confirmation"
 FONT 9, "Segoe UI"
 BEGIN
     CONTROL "", IDC_BOX_ICON, "STATIC", SS_ICON | SS_CENTERIMAGE | WS_CHILD | WS_VISIBLE, 7, 10, 32, 32
     LTEXT "Do you want to continue?", IDC_STATIC, 40, 10, 130, 32
-    DEFPUSHBUTTON "Yes", IDYES, 30, 45, 50, 14
-    PUSHBUTTON     "No", IDNO, 100, 45, 50, 14
+    DEFPUSHBUTTON  "Yes", IDYES, 10, 45, 50, 14
+    PUSHBUTTON     "No", IDNO, 80, 45, 50, 14
+    PUSHBUTTON     "Cancel", IDCANCEL, 150, 45, 50, 14
 END
 

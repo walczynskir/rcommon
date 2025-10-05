@@ -27,19 +27,23 @@ BEGIN
     IDS_PIN_ON                    "W³¹cz zawsze na wierzchu"
     IDS_BOX_WARNING               "Ostrze¿enie"
     IDS_BOX_DECISION              "Decyzja"
+    IDS_BOX_EXCEPTIONCAPTION      "Nieoczekiwany problem"
+    IDS_BOX_EXCEPTIONMESSAGE      "Wyst¹pi³ nieoczekiwany wyj¹tek. Zapisz grê i uruchom aplikacjê ponownie."
+    IDS_BOX_BUTTONOK			  "Ok"
 END
 
 
 
 
-IDD_CUSTOM_MSGBOX DIALOGEX 0, 0, 180, 70
+IDD_CUSTOM_MSGBOX DIALOGEX 0, 0, 210, 70
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Confirmation"
 FONT 9, "Segoe UI"
 BEGIN
     CONTROL "", IDC_BOX_ICON, "STATIC", SS_ICON | SS_CENTERIMAGE | WS_CHILD | WS_VISIBLE, 7, 10, 32, 32
     LTEXT "Kontynuowaæ?", IDC_STATIC, 40, 10, 130, 32
-    DEFPUSHBUTTON "Tak", IDYES, 30, 45, 50, 14
-    PUSHBUTTON     "Nie", IDNO, 100, 45, 50, 14
+    DEFPUSHBUTTON "Tak", IDYES, 10, 45, 50, 14
+    PUSHBUTTON     "Nie", IDNO, 80, 45, 50, 14
+    PUSHBUTTON     "Anuluj", IDCANCEL, 150, 45, 50, 14
 END
 

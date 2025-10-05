@@ -472,8 +472,6 @@ void DrawStatic(HWND a_hWnd, HDC a_hDC)
     BITMAP l_bmp;
     ::GetObject(l_hBmp, sizeof(l_bmp), &l_bmp);
 
-    TRACE1("%d\n", l_bmp.bmWidth);
-
     RECT l_rc;
     ::GetClientRect(a_hWnd, &l_rc);
 

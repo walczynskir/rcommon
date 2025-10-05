@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "resource.h"
 #include "RMessageBox.h"
+#include <map>
 
 // Static member definitions
 HHOOK RCenteredMessageBox::s_hHook = nullptr;
@@ -76,9 +77,8 @@ class RCustomMessageBox::Impl
 public:
     tstring m_sCaption;
     tstring m_sMsg;
-    tstring m_sYes;
-    tstring m_sNo;
-};
+    std::map<ButtonIdx, tstring> m_mapButtons;
+    };
 
 
 RCustomMessageBox::RCustomMessageBox(HINSTANCE a_hInst, HWND a_hParent) : m_hInstance(a_hInst), m_hParent(a_hParent), m_pImpl(new Impl())
@@ -117,6 +117,7 @@ INT_PTR CALLBACK RCustomMessageBox::DialogProc(HWND a_hDlg, UINT a_iMsg, WPARAM 
         {
         case IDYES:
         case IDNO:
+        case IDCANCEL:
             ::EndDialog(a_hDlg, LOWORD(a_wParam));
             return TRUE;
         }
@@ -137,12 +138,19 @@ BOOL RCustomMessageBox::OnInitDialog()
     if (!m_pImpl->m_sMsg.empty())
         ::SetDlgItemText(m_hDlg, IDC_STATIC, m_pImpl->m_sMsg.c_str());
 
-    if (!m_pImpl->m_sYes.empty())
-        SetDlgItemText(m_hDlg, IDYES, m_pImpl->m_sYes.c_str());
+    auto SetButtonText = [&](ButtonIdx a_idx, int a_idCtrl)
+        {
+            auto l_it = m_pImpl->m_mapButtons.find(a_idx);
+            if (l_it != m_pImpl->m_mapButtons.end() && !l_it->second.empty())
+            {
+                ::SetDlgItemText(m_hDlg, a_idCtrl, l_it->second.c_str());
+            }
+        };
 
-    if (!m_pImpl->m_sNo.empty())
-        SetDlgItemText(m_hDlg, IDNO, m_pImpl->m_sNo.c_str());
-
+    SetButtonText(ButtonIdx::First, IDYES);
+    SetButtonText(ButtonIdx::Second, IDNO);
+    SetButtonText(ButtonIdx::Third, IDCANCEL);    
+    
     // Load icon
     HICON l_hIcon = nullptr;
     switch (m_iconType) {
@@ -165,7 +173,8 @@ BOOL RCustomMessageBox::OnInitDialog()
         ::SendDlgItemMessage(m_hDlg, IDC_BOX_ICON, STM_SETICON, reinterpret_cast<WPARAM>(l_hIcon), 0);
     }
 
-    AdjustDialogSize();
+    //AdjustDialogSize();
+    AdjustButtons();
     switch (m_enCenterType)
     {
     case CenterType::Parent:
@@ -197,16 +206,86 @@ void RCustomMessageBox::SetMessage(LPCTSTR a_sMsg)
     m_pImpl->m_sMsg = a_sMsg;
 }
 
-void RCustomMessageBox::SetYesLabel(LPCTSTR a_sYes) 
-{ 
-    m_pImpl->m_sYes = a_sYes;
+void RCustomMessageBox::SetButtonsCount(ButtonsCount a_count)
+{
+    m_count = a_count;
 }
 
-void RCustomMessageBox::SetNoLabel(LPCTSTR a_sNo) 
-{ 
-    m_pImpl->m_sNo = a_sNo;
+void RCustomMessageBox::SetButtonText(ButtonIdx a_idx, LPCTSTR a_sText)
+{
+    m_pImpl->m_mapButtons[a_idx] = a_sText;
 }
 
+
+void RCustomMessageBox::SetButtonDefault(ButtonIdx a_idx) 
+{
+    m_idxDefault = a_idx;
+}
+
+
+void RCustomMessageBox::AdjustButtons()
+{
+    RECT l_rectDlg{};
+    ::GetWindowRect(m_hDlg, &l_rectDlg);
+
+    LONG l_dxHalf = RectWidth(l_rectDlg) / 2;
+
+    HWND l_hWndYes = ::GetDlgItem(m_hDlg, IDYES);
+    HWND l_hWndNo = ::GetDlgItem(m_hDlg, IDNO);
+    HWND l_hWndCancel = ::GetDlgItem(m_hDlg, IDCANCEL);
+    RECT l_rectButton{};
+    ::GetWindowRect(l_hWndYes, &l_rectButton);
+
+    ::MapWindowPoints(HWND_DESKTOP, m_hDlg, reinterpret_cast<LPPOINT>(&l_rectButton), 2);
+    LONG l_dxButton = RectWidth(l_rectButton);
+    LONG l_yButton = l_rectButton.top;
+
+    switch (m_count)
+    {
+    case ButtonsCount::One: // only IDYES button in the centre
+        ::SetWindowPos(l_hWndYes, nullptr, l_dxHalf - l_dxButton / 2, l_yButton, 0, 0, SWP_NOZORDER | SWP_NOREDRAW | SWP_NOSIZE);
+
+        ::ShowWindow(l_hWndNo, FALSE);
+        ::ShowWindow(l_hWndCancel, FALSE);
+        break;
+    case ButtonsCount::Two: // IDYES and IDNO buttons 
+        ::SetWindowPos(l_hWndYes, nullptr, l_dxHalf - m_dxGap / 2 - l_dxButton, l_yButton, 0, 0, SWP_NOZORDER | SWP_NOREDRAW | SWP_NOSIZE);
+        ::SetWindowPos(l_hWndNo, nullptr, l_dxHalf + m_dxGap / 2, l_yButton, 0, 0, SWP_NOZORDER | SWP_NOREDRAW | SWP_NOSIZE);
+
+        ::ShowWindow(l_hWndCancel, FALSE);
+        break;
+    case ButtonsCount::Three: // IDYES and IDNO buttons 
+        ::SetWindowPos(l_hWndYes, nullptr, l_dxHalf - l_dxButton / 2 - m_dxGap - l_dxButton, l_yButton, 0, 0, SWP_NOZORDER | SWP_NOREDRAW | SWP_NOSIZE);
+        ::SetWindowPos(l_hWndNo, nullptr, l_dxHalf - l_dxButton / 2, l_yButton, 0, 0, SWP_NOZORDER | SWP_NOREDRAW | SWP_NOSIZE);
+        ::SetWindowPos(l_hWndCancel, nullptr, l_dxHalf + l_dxButton / 2 + m_dxGap, l_yButton, 0, 0, SWP_NOZORDER | SWP_NOREDRAW | SWP_NOSIZE);
+        break;
+    default:
+        break;// do nothing
+    }
+
+}
+
+void RCustomMessageBox::SetDefaultButton()
+{
+    // Remove default style from old button
+    SendDlgItemMessage(m_hDlg, IDYES, BM_SETSTYLE, BS_PUSHBUTTON, TRUE);
+
+    // lambda for mapping
+    auto IdxToCtrlId = [](ButtonIdx a_idx) {
+        switch (a_idx) {
+        case ButtonIdx::First:  return IDYES;
+        case ButtonIdx::Second: return IDNO;
+        case ButtonIdx::Third:  return IDCANCEL;
+        }
+        return 0; // fallback
+        };
+
+    // Add default style to new button
+    SendDlgItemMessage(m_hDlg, IdxToCtrlId(m_idxDefault), BM_SETSTYLE, BS_DEFPUSHBUTTON, TRUE);
+
+    // Tell dialog manager which is default
+    SendMessage(m_hDlg, DM_SETDEFID, IdxToCtrlId(m_idxDefault), 0);
+}
 
 void RCustomMessageBox::AdjustDialogSize() 
 {
@@ -220,10 +299,10 @@ void RCustomMessageBox::AdjustDialogSize()
    :: SelectObject(l_hDC, l_hFont);
 
     RECT l_rcCalc = { 0, 0, 300, 0 }; // max width
-    ::DrawText(l_hDC, m_pImpl->m_sMsg.c_str(), -1, &l_rcCalc, DT_CALCRECT | DT_WORDBREAK | DT_VCENTER);
+    ::DrawText(l_hDC, m_pImpl->m_sMsg.c_str(), -1, &l_rcCalc, DT_CALCRECT | DT_WORDBREAK | DT_VCENTER | DT_END_ELLIPSIS);
     ::ReleaseDC(l_hWndText, l_hDC);
 
-    ::SetWindowPos(l_hWndText, nullptr, l_rcText.left, l_rcText.top, l_rcText.right, l_rcText.bottom, SWP_NOZORDER);
+    ::SetWindowPos(l_hWndText, nullptr, l_rcText.left, l_rcText.top, RectWidth(l_rcCalc) - 150, RectHeight(l_rcCalc), SWP_NOZORDER);
 }
 
 
@@ -270,4 +349,33 @@ void RCustomMessageBox::CenterDialogParent()
     int l_yDlg = l_rcParent.top + static_cast<int>((l_dyParent - l_dyDlg) / 2);
 
     ::SetWindowPos(m_hDlg, nullptr, l_xDlg, l_yDlg, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+}
+
+
+void ExceptionMessageBox(HWND a_hWnd, LPCTSTR a_sMessage)
+{
+    RCustomMessageBox l_msgBox(RCommon_GetInstance(), a_hWnd);
+    TCHAR l_sCaption[128];
+    ::LoadString(RCommon_GetInstance(), IDS_BOX_EXCEPTIONCAPTION, l_sCaption, ArraySize(l_sCaption));
+
+    l_msgBox.SetCaption(l_sCaption);
+    l_msgBox.SetCenteredParent();
+
+    TCHAR l_sMessageDefault[256];
+    ::LoadString(RCommon_GetInstance(), IDS_BOX_EXCEPTIONMESSAGE, l_sMessageDefault, ArraySize(l_sMessageDefault));
+
+    tstring l_sWholeMessage = a_sMessage;
+    if (_tcslen(a_sMessage) == 0)
+        l_sWholeMessage = l_sMessageDefault;
+    else
+        l_sWholeMessage = a_sMessage + tstring(_T("\n")) + l_sMessageDefault;
+
+    TCHAR l_sButtonText[64];
+    ::LoadString(RCommon_GetInstance(), IDS_BOX_BUTTONOK, l_sButtonText, ArraySize(l_sButtonText));
+
+    l_msgBox.SetMessage(l_sWholeMessage.c_str());
+    l_msgBox.SetIcon(RCustomMessageBox::IconType::Error);
+    l_msgBox.SetButtonsCount(RCustomMessageBox::ButtonsCount::One);
+    l_msgBox.SetButtonText(RCustomMessageBox::ButtonIdx::First, l_sButtonText);
+    l_msgBox.Show();
 }

@@ -442,7 +442,6 @@ OnLButtonUp(
 	if (PointOnColor(a_hWnd, a_pPoint, &l_color))
 	{
 		NotifyOwner(a_hWnd, l_pData->GetSelColor());
-		TRACE0("OnLButtonUp \n");
 		DropDown(a_hWnd, FALSE, NULL, 0);
 	}
 
