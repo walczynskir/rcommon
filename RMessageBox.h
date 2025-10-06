@@ -98,7 +98,7 @@ private:
     void AdjustDialogSize();
     void CenterDialogScreen();
     void CenterDialogParent();
-
+    HICON LoadIcon();
 
 private:
     class Impl; // Forward declaration (to keep tstrings out of the class for dll ABI compatibility)

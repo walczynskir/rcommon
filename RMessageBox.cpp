@@ -67,6 +67,7 @@ BOOL RCenteredMessageBox::DecisionBox2(HWND a_hWndParent, LPCTSTR a_sDecisionTex
     l_msgBox.SetMessage(a_sDecisionText);
     l_msgBox.SetIcon(RCustomMessageBox::IconType::Question);
     l_msgBox.SetCenteredParent();
+    l_msgBox.SetButtonsCount(RCustomMessageBox::ButtonsCount::Two);
 
     return (l_msgBox.Show() == RCustomMessageBox::Result::Yes);
 }
@@ -138,6 +139,7 @@ BOOL RCustomMessageBox::OnInitDialog()
     if (!m_pImpl->m_sMsg.empty())
         ::SetDlgItemText(m_hDlg, IDC_STATIC, m_pImpl->m_sMsg.c_str());
 
+
     auto SetButtonText = [&](ButtonIdx a_idx, int a_idCtrl)
         {
             auto l_it = m_pImpl->m_mapButtons.find(a_idx);
@@ -150,25 +152,9 @@ BOOL RCustomMessageBox::OnInitDialog()
     SetButtonText(ButtonIdx::First, IDYES);
     SetButtonText(ButtonIdx::Second, IDNO);
     SetButtonText(ButtonIdx::Third, IDCANCEL);    
-    
-    // Load icon
-    HICON l_hIcon = nullptr;
-    switch (m_iconType) {
-        case IconType::Information:
-            l_hIcon = ::LoadIcon(nullptr, IDI_INFORMATION);
-            break;
-        case IconType::Warning:
-            l_hIcon = ::LoadIcon(nullptr, IDI_WARNING);     
-            break;
-        case IconType::Error:
-            l_hIcon = ::LoadIcon(nullptr, IDI_ERROR);       
-            break;
-        case IconType::Question:
-            l_hIcon = ::LoadIcon(nullptr, IDI_QUESTION);    
-            break;
-        default: 
-            break;
-    }
+      
+    HICON l_hIcon = LoadIcon();
+
     if (l_hIcon) {
         ::SendDlgItemMessage(m_hDlg, IDC_BOX_ICON, STM_SETICON, reinterpret_cast<WPARAM>(l_hIcon), 0);
     }
@@ -192,6 +178,31 @@ BOOL RCustomMessageBox::OnInitDialog()
     SetForegroundWindow(m_hDlg);
 
     return TRUE;
+}
+
+
+HICON RCustomMessageBox::LoadIcon()
+{
+    int l_dpi = GetDpiForWindow(m_hDlg);
+    int l_size = MulDiv(32, l_dpi, 96); // scale 32px to current DPI
+
+    // lambda for mapping
+    auto IconTypeToId = [](IconType a_idx) {
+        switch (a_idx) {
+        case IconType::Information:  return IDI_INFORMATION;
+        case IconType::Warning: return IDI_WARNING;
+        case IconType::Error:  return IDI_ERROR;
+        case IconType::Question:  return IDI_QUESTION;
+        }
+        return MAKEINTRESOURCE(0); // fallback
+        };
+
+    return static_cast<HICON>(::LoadImage(
+        nullptr,
+        IconTypeToId(m_iconType),
+        IMAGE_ICON,
+        l_size, l_size,
+        LR_SHARED));
 }
 
 
@@ -379,3 +390,5 @@ void ExceptionMessageBox(HWND a_hWnd, LPCTSTR a_sMessage)
     l_msgBox.SetButtonText(RCustomMessageBox::ButtonIdx::First, l_sButtonText);
     l_msgBox.Show();
 }
+
+
