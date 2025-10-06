@@ -3,75 +3,6 @@
 #include "RMessageBox.h"
 #include <map>
 
-// Static member definitions
-HHOOK RCenteredMessageBox::s_hHook = nullptr;
-HWND RCenteredMessageBox::s_hParent = nullptr;
-
-
-
-
-int RCenteredMessageBox::Show(HWND hParent, LPCTSTR text, LPCTSTR caption, UINT type)
-{
-    s_hParent = hParent;
-    s_hHook = SetWindowsHookEx(WH_CBT, HookProc, nullptr, GetCurrentThreadId());
-    return MessageBox(hParent, text, caption, type);
-}
-
-LRESULT CALLBACK RCenteredMessageBox::HookProc(int nCode, WPARAM wParam, LPARAM lParam)
-{
-    if (nCode == HCBT_ACTIVATE)
-    {
-        HWND hMsgBox = reinterpret_cast<HWND>(wParam);
-
-        RECT rcParent{}, rcMsgBox{};
-        GetWindowRect(s_hParent, &rcParent);
-        GetWindowRect(hMsgBox, &rcMsgBox);
-
-        int width = rcMsgBox.right - rcMsgBox.left;
-        int height = rcMsgBox.bottom - rcMsgBox.top;
-
-        int x = rcParent.left + ((rcParent.right - rcParent.left) - width) / 2;
-        int y = rcParent.top + ((rcParent.bottom - rcParent.top) - height) / 2;
-
-        MoveWindow(hMsgBox, x, y, width, height, FALSE);
-
-        UnhookWindowsHookEx(s_hHook);
-    }
-
-    return CallNextHookEx(s_hHook, nCode, wParam, lParam);
-}
-
-
-void RCenteredMessageBox::WarningBox(HWND a_hDlg, LPCTSTR a_sWarningText)
-{
-	TCHAR l_sWarningTitle[256];
-	::LoadString(RCommon_GetInstance(), IDS_BOX_WARNING, l_sWarningTitle, ArraySize(l_sWarningTitle));
-    RCenteredMessageBox::Show(a_hDlg, a_sWarningText, l_sWarningTitle, MB_OK | MB_ICONWARNING);
-}
-
-
-BOOL RCenteredMessageBox::DecisionBox(HWND a_hDlg, LPCTSTR a_sDecisionText)
-{
-	TCHAR l_sDecisionTitle[256];
-	::LoadString(RCommon_GetInstance(), IDS_BOX_DECISION, l_sDecisionTitle, ArraySize(l_sDecisionTitle));
-	return (RCenteredMessageBox::Show(a_hDlg, a_sDecisionText, l_sDecisionTitle, MB_YESNO | MB_ICONWARNING) == IDYES);
-}
-
-BOOL RCenteredMessageBox::DecisionBox2(HWND a_hWndParent, LPCTSTR a_sDecisionText)
-{
-    TCHAR l_sDecisionTitle[256];
-    ::LoadString(RCommon_GetInstance(), IDS_BOX_DECISION, l_sDecisionTitle, ArraySize(l_sDecisionTitle));
-
-    RCustomMessageBox l_msgBox(RCommon_GetInstance(), a_hWndParent);
-    l_msgBox.SetCaption(l_sDecisionTitle);
-    l_msgBox.SetMessage(a_sDecisionText);
-    l_msgBox.SetIcon(RCustomMessageBox::IconType::Question);
-    l_msgBox.SetCenteredParent();
-    l_msgBox.SetButtonsCount(RCustomMessageBox::ButtonsCount::Two);
-
-    return (l_msgBox.Show() == RCustomMessageBox::Result::Yes);
-}
-
 
 class RCustomMessageBox::Impl 
 {
@@ -389,6 +320,21 @@ void ExceptionMessageBox(HWND a_hWnd, LPCTSTR a_sMessage)
     l_msgBox.SetButtonsCount(RCustomMessageBox::ButtonsCount::One);
     l_msgBox.SetButtonText(RCustomMessageBox::ButtonIdx::First, l_sButtonText);
     l_msgBox.Show();
+}
+
+BOOL DecisionMessageBox(HWND a_hWndParent, LPCTSTR a_sDecisionText)
+{
+    TCHAR l_sDecisionTitle[256];
+    ::LoadString(RCommon_GetInstance(), IDS_BOX_DECISION, l_sDecisionTitle, ArraySize(l_sDecisionTitle));
+
+    RCustomMessageBox l_msgBox(RCommon_GetInstance(), a_hWndParent);
+    l_msgBox.SetCaption(l_sDecisionTitle);
+    l_msgBox.SetMessage(a_sDecisionText);
+    l_msgBox.SetIcon(RCustomMessageBox::IconType::Question);
+    l_msgBox.SetCenteredParent();
+    l_msgBox.SetButtonsCount(RCustomMessageBox::ButtonsCount::Two);
+
+    return (l_msgBox.Show() == RCustomMessageBox::Result::Yes);
 }
 
 

@@ -5,26 +5,7 @@
 
 
 extern RCOMMON_API void ExceptionMessageBox(HWND a_hWnd, LPCTSTR a_sMessage);
-
-
-class RCOMMON_API RCenteredMessageBox
-{
-public:
-    static int Show(HWND hParent, LPCTSTR text, LPCTSTR caption, UINT type);
-    static void WarningBox(HWND a_hDlg, LPCTSTR a_sWarningText);
-    static BOOL DecisionBox(HWND a_hDlg, LPCTSTR a_sDecisionText);
-    static BOOL DecisionBox2(HWND a_hWndParent, LPCTSTR a_sDecisionText);
-
-
-private:
-    static HHOOK s_hHook;
-    static HWND s_hParent;
-
-    static LRESULT CALLBACK HookProc(int nCode, WPARAM wParam, LPARAM lParam);
-
-};
-
-
+extern RCOMMON_API BOOL DecisionMessageBox(HWND a_hWndParent, LPCTSTR a_sDecisionText);
 
 class RCOMMON_API RCustomMessageBox
 {
@@ -109,7 +90,7 @@ private:
     HWND m_hParent;
     IconType m_iconType = IconType::None;
     CenterType m_enCenterType = CenterType::None;
-    ButtonsCount m_count;
+    ButtonsCount m_count = ButtonsCount::One;
     ButtonIdx m_idxDefault = ButtonIdx::First;
     LONG m_dxGap = 20;
 };

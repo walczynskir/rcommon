@@ -6,6 +6,10 @@
 
 #ifdef RCOMMON_DLL //DLL
 
+// TODO ExceptionMessageBox - load message from resources
+// TODO make thread safe
+// TODO this module - initialize in a thread safe way
+// TODO consider using C++11 std::atomic for g_hModule
 HINSTANCE g_hModule = NULL;
 
 BOOL APIENTRY DllMain( HANDLE hModule, 

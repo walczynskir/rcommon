@@ -1,4 +1,5 @@
 del  "%CPP_PATH_DEV%\include\%1\*.h"
+del  "%CPP_PATH_DEV%\include\%1\*.hpp"
 del  "%CPP_PATH_DEV%\include\%1\*.rc"
 
 copy "%CPP_PATH_DEV%\src\%1\Autostart.h" "%CPP_PATH_DEV%\include\\%1\"
@@ -45,5 +46,6 @@ copy "%CPP_PATH_DEV%\src\%1\rstring.h" "%CPP_PATH_DEV%\include\%1\"
 copy "%CPP_PATH_DEV%\src\%1\RSystemExc.h" "%CPP_PATH_DEV%\include\%1\"
 copy "%CPP_PATH_DEV%\src\%1\RTheme.h" "%CPP_PATH_DEV%\include\%1\"
 copy "%CPP_PATH_DEV%\src\%1\rich.h" "%CPP_PATH_DEV%\include\%1\"
+copy "%CPP_PATH_DEV%\src\%1\SafeWndProc.hpp" "%CPP_PATH_DEV%\include\%1\"
 copy "%CPP_PATH_DEV%\src\%1\targetver.h" "%CPP_PATH_DEV%\include\%1\"
 copy "%CPP_PATH_DEV%\src\%1\rcommon.rc" "%CPP_PATH_DEV%\include\%1\"

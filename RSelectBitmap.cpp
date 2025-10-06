@@ -487,7 +487,8 @@ void DrawStatic(HWND a_hWnd, HDC a_hDC)
 
 
 // with keeping aspect and fitting into the static 
-void DrawBitmap(HDC a_hDC, HBITMAP a_hBmp, int a_x, int a_y, const RECT& a_rectDest)
+// TODO - crop if needed a_y needed for vertial animation (not implemented yet)
+void DrawBitmap(HDC a_hDC, HBITMAP a_hBmp, int a_x, int /*a_y*/, const RECT& a_rectDest)
 {
     if (!a_hBmp)
         return;

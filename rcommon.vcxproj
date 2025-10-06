@@ -341,6 +341,7 @@ copy %CPP_PATH_DEV%\src\$(ProjectName)\$(OutDir)$(ProjectName)s.res %CPP_PATH_DE
     <ClInclude Include="RTipData.h" />
     <ClInclude Include="RTrackerData.h" />
     <ClInclude Include="RTrackerWnd.h" />
+    <ClInclude Include="SafeWndProc.hpp" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
