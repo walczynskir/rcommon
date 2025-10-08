@@ -220,10 +220,9 @@ static void EndEdit(HWND a_hWndEdit, WNDPROC a_wndprocDef, bool a_bCommit, bool 
 
 
 
-// functional macros
-#pragma todo ("smooth scroll")
-#pragma todo ("registered functions for celltips - I don't know what will be drawed.")
-#pragma todo ("Handle not known count of rows")
+// TODO smooth scroll
+// TODO registered functions for celltips - I don't know what will be drawed
+// TODO Handle not known count of rows
 
 
 //	---------------------------------------------------------------------------------------
@@ -1751,7 +1750,7 @@ void OnKeyDown(HWND a_hWnd,	UINT a_iChar, LPARAM a_lParam)
 
 	case VK_RETURN:
 		{
-		#pragma todo ("check, if works correctly after removing declaration of l_pData var")
+// TODO check, if works correctly after removing declaration of l_pData var
 		if ((l_nmkey.nVKey == VK_RETURN) && (!l_pData->IsEditCell()))
 		{
 			long l_iSelRow = l_pData->GetSelRow();
@@ -3006,7 +3005,7 @@ InvalidateTrackedRow(
 	)
 {
 	const RListData* l_pData = GetRListCtrlData(a_hWnd);
-#pragma todo("This code should probably be changed to be same as in InvalidateTrackedCol")
+// TODO This code should probably be changed to be same as in InvalidateTrackedCol
 	RECT l_rectClient;
 	GetClientRect(a_hWnd, &l_rectClient);
 	RECT l_rectLeftCol = {0, a_iStartTracked, 
@@ -3638,7 +3637,7 @@ BOOL HasToShowCellTip(
 	LPCTSTR l_psText;
 	l_pData->GetData(l_cell.cell.iRow, l_cell.cell.iCol, &l_psText);
 
-#pragma todo("not able to properly calculate needed size for drawing rect, because don't know used font")
+// TODO not able to properly calculate needed size for drawing rect, because don't know used font
 	HDC l_hDC = ::GetDC(a_hWnd);
 	HFONT l_hFontOld = (HFONT)::SelectObject(l_hDC, l_pData->GetFont());
 
