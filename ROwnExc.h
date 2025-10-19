@@ -2,7 +2,17 @@
 #include "rcommon.h"
 #include "RException.h"
 
-#pragma warning(disable: 4251)
+
+#ifdef _UNICODE
+#define THROW_ROWN_EXC(place) \
+    throw ROwnExc((place) + std::wstring(L" [") + std::wstring(__FILEW__) + std::wstring(L":") + std::to_wstring(__LINE__) + std::wstring(L"]"))
+#else
+#define THROW_ROWN_EXC(place) \
+	throw ROwnExc(std::string(place) + std::string(" [") + std::string(__FILE__) + std::string(":") + std::to_string(__LINE__) + std::string("]"))
+#endif 
+
+
+
 class RCOMMON_API ROwnExc :	public RException
 {
 public:
@@ -22,4 +32,3 @@ public:
 private:
 	tstring m_sMsg;
 };
-#pragma warning(default: 4251)
