@@ -2,6 +2,16 @@
 #include <rcommon/RException.h>
 #include <format>  // C++20 header
 
+
+#ifdef _UNICODE
+#define THROW_RSYSTEM_EXC(place) \
+    throw RSystemExc((place) + std::wstring(L" [") + std::wstring(__FILEW__) + std::wstring(L":") + std::to_wstring(__LINE__) + std::wstring(L"]"))
+#else
+#define THROW_SYSTEM_EXC(place) \
+	throw RSystemExc(std::string(place) + std::string(" [") + std::string(__FILE__) + std::string(":") + std::to_string(__LINE__) + std::string("]"))
+#endif 
+
+
 class RSystemExc : public RException
 {
 public:
@@ -9,6 +19,7 @@ public:
 	RSystemExc(DWORD a_dwCode) : m_sMsg(_T(""))  { SetCode(a_dwCode); };
 	RSystemExc(DWORD a_dwCode, LPCTSTR a_sMsg) : m_sMsg(a_sMsg) { SetCode(a_dwCode); };
 	RSystemExc(LPCTSTR a_sMsg) : m_sMsg(a_sMsg) { SetCode(::GetLastError()); };
+	RSystemExc(const tstring& a_sMsg) : m_sMsg(a_sMsg) { SetCode(::GetLastError()); };
 	virtual ~RSystemExc(void) {};
 	RSystemExc& operator = (DWORD a_dwCode ) { m_dwCode = a_dwCode;	return *this; };
 
