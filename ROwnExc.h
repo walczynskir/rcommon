@@ -1,34 +1,39 @@
 #pragma once
 #include "rcommon.h"
 #include "RException.h"
+#include <strsafe.h>
 
 
 #ifdef _UNICODE
 #define THROW_ROWN_EXC(place) \
-    throw ROwnExc((place) + std::wstring(L" [") + std::wstring(__FILEW__) + std::wstring(L":") + std::to_wstring(__LINE__) + std::wstring(L"]"))
+{ \
+    TCHAR l_sBuf[1024]; \
+    StringCchPrintf(l_sBuf, ArraySize(l_sBuf), L"%s [%s:%d]", place, __FILEW__, __LINE__); \
+    throw ROwnExc(l_sBuf); \
+}
 #else
 #define THROW_ROWN_EXC(place) \
-	throw ROwnExc(std::string(place) + std::string(" [") + std::string(__FILE__) + std::string(":") + std::to_string(__LINE__) + std::string("]"))
-#endif 
+{ \
+    char l_sBuf[1024]; \
+    StringCchPrintfA(l_sBuf, ArraySize(l_sBuf), "%s [%s:%d]", place, __FILE__, __LINE__); \
+    throw ROwnExc(l_sBuf); \
+}
+#endif
 
 
 
-class RCOMMON_API ROwnExc :	public RException
+class RCOMMON_API ROwnExc : public RException
 {
 public:
+    ROwnExc(LPCTSTR a_sMsg)
+    {
+        StringCchCopy(m_sMsg, ArraySize(m_sMsg), a_sMsg);
+    }
 
-	ROwnExc(const tstring& a_sMsg) : m_sMsg(a_sMsg)	{}
-	ROwnExc(HINSTANCE a_hInst, UINT a_idStr) 
-	{
-		TCHAR l_sBuf[1024]; // hope it's big enough
-		::LoadString(a_hInst, a_idStr, l_sBuf, ArraySize(l_sBuf));
-		m_sMsg = l_sBuf;
-	}
+    ROwnExc(HINSTANCE a_hInst, UINT a_idStr)
+    {
+        ::LoadString(a_hInst, a_idStr, m_sMsg, ArraySize(m_sMsg));
+    }
 
-	~ROwnExc(void) {}
 
-	virtual tstring GetFormattedMsg() const { return m_sMsg; }
-
-private:
-	tstring m_sMsg;
 };
