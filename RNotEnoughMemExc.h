@@ -14,6 +14,6 @@ public:
 	{
 	}
 
-	virtual tstring GetFormattedMsg(void) { return _T("Not enough memory"); };
+	virtual LPCTSTR GetFormattedMsg(void) { return _T("Not enough memory"); };
 
 };

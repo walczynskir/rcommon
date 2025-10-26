@@ -12,11 +12,11 @@ LRESULT CALLBACK SafeWndProc(HWND a_hWnd, UINT a_iMsg, WPARAM a_wParam, LPARAM a
         return WndProc(a_hWnd, a_iMsg, a_wParam, a_lParam);
     }
     catch (const RSystemExc& l_exc) {
-        ExceptionMessageBox(a_hWnd, l_exc.GetFormattedMsg().c_str());
+        ExceptionMessageBox(a_hWnd, l_exc.GetFormattedMsg());
         return 0;
     }
     catch (const ROwnExc& l_exc) {
-        ExceptionMessageBox(a_hWnd, l_exc.GetFormattedMsg().c_str());
+        ExceptionMessageBox(a_hWnd, l_exc.GetFormattedMsg());
         return 0;
     }
     catch (...) {
@@ -33,11 +33,11 @@ INT_PTR CALLBACK SafeDialogProc(HWND a_hDlg, UINT a_iMsg, WPARAM a_wParam, LPARA
         return DialogProc(a_hDlg, a_iMsg, a_wParam, a_lParam);
     }
     catch (const RSystemExc& l_exc) {
-        ExceptionMessageBox(a_hDlg, l_exc.GetFormattedMsg().c_str());
+        ExceptionMessageBox(a_hDlg, l_exc.GetFormattedMsg());
         return FALSE; // abort safely
     }
     catch (const ROwnExc& l_exc) {
-        ExceptionMessageBox(a_hDlg, l_exc.GetFormattedMsg().c_str());
+        ExceptionMessageBox(a_hDlg, l_exc.GetFormattedMsg());
         return FALSE;
     }
     catch (...) {
